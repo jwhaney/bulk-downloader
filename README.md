@@ -1,7 +1,7 @@
 # bulk-downloader
-__bulk download tnris datahub collection resources__
+### __bulk download tnris datahub collection resources__
 
-Steps:
+__Instructions__:
 1. Hit the green 'Clone or Download' button in this repo (upper right side)
 2. Click Download ZIP
 3. Create a local project directory to extract the repo files. Example: create a new folder on your desktop or somewhere called tnris-bulk-downloader and unzip the files in there.
