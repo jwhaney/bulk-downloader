@@ -1,5 +1,5 @@
 # bulk-downloader
-bulk download tnris datahub collection resources
+__bulk download tnris datahub collection resources__
 
 Steps:
 1. Create a local project directory for this script and the requirements file. Example: create a new folder on your desktop or somewhere called tnris-bulk-downloader and put the files in there.
