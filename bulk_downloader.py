@@ -6,7 +6,7 @@ base_query = "?collection_id="
 count = 0
 
 # prompt user for a tnris collection id
-collection_id_string = input("Enter TNRIS collection id: ")
+collection_id_string = input("Enter TNRIS DataHub Collection ID: ")
 
 # get data from api.tnris.org rest endpoint for datahub resources
 data = requests.get(base_url + base_query + collection_id_string).json()
