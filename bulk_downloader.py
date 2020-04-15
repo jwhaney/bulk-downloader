@@ -34,41 +34,48 @@ label_list = [label_1, label_2, label_3, label_4, label_5]
 for label in label_list:
     label.configure(font=('Courier', 11, 'bold'))
     label.pack(fill='both')
+    # label.grid(column=0, row=0)
 
 # collection id entry
 collection_id = tk.Entry(top_frame, width=45, font=('Courier', 11))
 collection_id.pack()
+# collection_id.grid(column=0, row=0)
 collection_id.focus()
 
 # resource types check box variables
-type_value = tk.BooleanVar()
-# type_value = tk.StringVar()
-# type_value.set(False)
-type_1 = tk.Checkbutton(middle_frame_1, text="Lidar Point Cloud")
-type_2 = tk.Checkbutton(middle_frame_1, text="Hypsography")
-type_3 = tk.Checkbutton(middle_frame_1, text="Digital Elevation Model")
-type_4 = tk.Checkbutton(middle_frame_1, text="Land Cover")
-type_5 = tk.Checkbutton(middle_frame_1, text="Vector")
-type_6 = tk.Checkbutton(middle_frame_1, text="Natural Color/Color Infrared (4 Band)")
-type_list = [type_1, type_2, type_3, type_4, type_5, type_6]
+type_value = tk.StringVar()
+type_value.set("")
+type_1 = tk.Checkbutton(middle_frame_1, text="Lidar Point Cloud", var=type_value, onvalue="LPC", offvalue="")
+type_2 = tk.Checkbutton(middle_frame_1, text="Hypsography", var=type_value, onvalue="HYPSO", offvalue="")
+type_3 = tk.Checkbutton(middle_frame_1, text="Digital Elevation Model", var=type_value, onvalue="DEM", offvalue="")
+type_4 = tk.Checkbutton(middle_frame_1, text="Land Cover", var=type_value, onvalue="LC", offvalue="")
+type_5 = tk.Checkbutton(middle_frame_1, text="Vector", var=type_value, onvalue="VECTOR", offvalue="")
+type_6 = tk.Checkbutton(middle_frame_1, text="Color Infrared (3 Band)", var=type_value, onvalue="CIR", offvalue="")
+type_7 = tk.Checkbutton(middle_frame_1, text="Natural Color (3 Band)", var=type_value, onvalue="NC", offvalue="")
+type_8 = tk.Checkbutton(middle_frame_1, text="Natural Color/Color Infrared (4 Band)", var=type_value, onvalue="NC-CIR", offvalue="")
+type_9 = tk.Checkbutton(middle_frame_1, text="Black & White (1 Band)", var=type_value, onvalue="BW", offvalue="")
+type_10 = tk.Checkbutton(middle_frame_1, text="Map", var=type_value, onvalue="MAP", offvalue="")
+type_list = [type_1, type_2, type_3, type_4, type_5, type_6, type_7, type_8, type_9, type_10]
 # for loop to pack all check boxes
 for type in type_list:
     type.configure(font=('Courier', 11))
     type.pack(fill='both')
+    # type.grid(column=0, row=0)
 
 # area type check box variables
-area_value = tk.BooleanVar()
-# area_value = tk.StringVar()
-# area_value.set(False)
-area_1 = tk.Checkbutton(middle_frame_2, text="state")
-area_2 = tk.Checkbutton(middle_frame_2, text="county")
-area_3 = tk.Checkbutton(middle_frame_2, text="quad")
-area_4 = tk.Checkbutton(middle_frame_2, text="qquad")
+# area_value = tk.BooleanVar()
+area_value = tk.StringVar()
+area_value.set("")
+area_1 = tk.Checkbutton(middle_frame_2, text="state", var=area_value, onvalue="state", offvalue="")
+area_2 = tk.Checkbutton(middle_frame_2, text="county", var=area_value, onvalue="county", offvalue="")
+area_3 = tk.Checkbutton(middle_frame_2, text="quad", var=area_value, onvalue="quad", offvalue="")
+area_4 = tk.Checkbutton(middle_frame_2, text="qquad", var=area_value, onvalue="qquad", offvalue="")
 area_list = [area_1, area_2, area_3, area_4]
 # for loop to pack all check boxes
 for area in area_list:
     area.configure(font=('Courier', 11))
     area.pack(fill='both')
+    # area.grid(column=0, row=0)
 
 # Progress bar widget
 progress = Progressbar(middle_frame_3, orient='horizontal')
@@ -83,11 +90,11 @@ message_area = tk.Label(middle_frame_4, textvariable=display_message, font=('Cou
 message_area.pack(fill='both')
 
 # kill function
-def kill():
-    display_message.set("killing process...")
-    print("killing process...")
-    time.sleep(2)
-    window.destroy()
+# def kill():
+#     display_message.set("killing process...")
+#     print("killing process...")
+#     time.sleep(2)
+#     window.destroy()
 
 # function to make requests to api.tnris.org resources endpoint to download data
 def bulk_download():
@@ -97,15 +104,43 @@ def bulk_download():
     type_query = "&resource_type_name="
     type_abbr_query = "&resource_type_abbreviation="
     area_query = "&area_type="
+    data = ""
     count = 0
     progress_value = 0
     c = collection_id.get()
+    t = type_value.get()
+    a = area_value.get()
 
-    # get data from api.tnris.org rest endpoint for datahub resources
-    data = requests.get(base_url + id_query + collection_id.get()).json()
+    # assign data variable based on checkbox selections (build the url string requests needs to get data from rest endpoint)
+    # if no selections made, build url string to get all resources for that collection id
+    if not t and not a:
+        print('no selections made')
+        data = requests.get(base_url + id_query + c).json()
+    # if both type and area selections made, build the url string
+    elif t and a:
+        print('both area and type selections made. type = {} and area = {}'.format(t,a))
+        # need to handle here if there area multiple selections made for both type and area
+
+        # if both area and type selected then combine all of it into data request
+        data = requests.get(base_url + id_query + c + type_abbr_query + t + area_query + a).json()
+    # if type selection made but not area, build the url string
+    elif t and not a:
+        print('type selections made. type = {}'.format(t))
+        # need to handle here if multiple type selections made but no area selections
+
+        data = requests.get(base_url + id_query + c + type_abbr_query + t).json()
+    # if area selection made but not type, build the url string
+    elif a and not t:
+        print('area selections made. area = {}'.format(a))
+        # need to handle here if multiple area selections made but no type selections
+
+        data = requests.get(base_url + id_query + c + area_query + a).json()
+
     # api data variables - string and integer
     api_str_count = str(data['count'])
     api_num_count = data['count']
+
+    print(api_str_count + " number of resources found!!!!!")
 
     # progress bar function
     def p_bar(value):
@@ -119,8 +154,6 @@ def bulk_download():
         print('should see resource count here')
         print(api_str_count + " resources found for tnris collection id " + c)
         display_message.set(api_str_count + " resources found for tnris collection id " + c)
-        print('sleeping for 2 secs')
-        time.sleep(2)
         # set message to tell user download progress started
         display_message.set("resource download(s) in progress...")
 
@@ -133,14 +166,18 @@ def bulk_download():
                 open('data/{}'.format(obj['resource'].rsplit('/', 1)[-1]), 'wb').write(file.content)
                 count += 1
                 # update progress_value variable by dividing new count number by total api object count
-                progress_value = round((count/api_num_count)*100,0)
-                print(round((count/api_num_count)*100,1))
+                progress_value = round((count/api_num_count)*100,1)
+                print(str(progress_value) + "%")
                 # feed new progress value into p_bar function to update gui
                 p_bar(progress_value)
+                # show display message as progress percentage string
+                display_message.set(str(progress_value) + "%")
             except requests.ConnectionError:
                 print("requests connection error")
+                display_message.set("requests connection error")
             except requests.ConnectTimeout:
                 print("requests timeout error")
+                display_message.set("requests timeout error")
     else:
         display_message.set("There was an error with the DataHub collection id string or there were no resources for that collection id. Please try again.")
 
@@ -149,6 +186,6 @@ def bulk_download():
 
 
 tk.Button(bottom_frame_left, text="Start", command=bulk_download, bg="#009933", fg="white", activebackground="green", activeforeground="white").pack()
-tk.Button(bottom_frame_right, text="Stop", command=window.quit, bg="#ff4d4d", fg="white", activebackground="red", activeforeground="white").pack()
+# tk.Button(bottom_frame_right, text="Stop", command=window.quit, bg="#ff4d4d", fg="white", activebackground="red", activeforeground="white").pack()
 
 window.mainloop()
