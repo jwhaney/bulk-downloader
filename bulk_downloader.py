@@ -146,7 +146,7 @@ def bulk_download():
         middle_frame_4.update_idletasks()
         time.sleep(1)
         print("beginning dowload process")
-        
+
         for obj in data['results']:
             try:
                 print("downloading resource id: {}".format(obj['resource'].rsplit('/', 1)[-1]))
@@ -185,6 +185,7 @@ def bulk_download():
         # make sure message is updated
         middle_frame_4.update_idletasks()
 
-tk.Button(bottom_frame, text="Get Data", command=bulk_download, bg="#009933", fg="white", activebackground="green", activeforeground="white").pack(pady=20)
+get_data = tk.Button(bottom_frame, text="Get Data", command=bulk_download, bg="#009933", fg="white", activebackground="green", activeforeground="white")
+get_data.pack(pady=20)
 
 window.mainloop()
