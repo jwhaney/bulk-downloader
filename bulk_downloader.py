@@ -144,7 +144,9 @@ def bulk_download():
         # show user how many collection resources returned from query
         display_message_1.set("{} resources found for tnris collection id {}".format(data['count'],c))
         middle_frame_4.update_idletasks()
-
+        time.sleep(1)
+        print("beginning dowload process")
+        
         for obj in data['results']:
             try:
                 print("downloading resource id: {}".format(obj['resource'].rsplit('/', 1)[-1]))
@@ -160,6 +162,7 @@ def bulk_download():
                 # feed new progress value into p_bar function to update gui
                 p_bar(progress_value)
                 # show display message as progress percentage string
+                display_message_1.set("{}/{} resources downloaded".format(count, api_str_count))
                 display_message_2.set("download progress: " + str(progress_value) + "%")
                 # make sure message is updated
                 middle_frame_4.update_idletasks()
