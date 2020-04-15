@@ -12,7 +12,7 @@ The bulk downloader utility uses the TNRIS API Resource REST endpoints (https://
 5. Open terminal and cd into your project folder - `cd tnris-bulk-downloader`
 6. Run `pip install -r requirements.txt`
 7. Run `python3 bulk_downloader.py`
-8. Paste the tnris datahub collection id you want to bulk download data for when the script prompts you for it.
+8. You should now see a graphical user interface (gui). Paste the tnris datahub collection id you want to bulk download data for at the top.
     - to find the collection id you want, go to data.tnris.org and find the dataset
     - when you find it, look in your browser url window and copy the last part of the url after `collection/`
       - example datahub collection url: https://data.tnris.org/collection/a8ef3bfc-1e26-4fba-9abe-1b86ecd594e2
