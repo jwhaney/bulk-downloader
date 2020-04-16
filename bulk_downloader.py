@@ -10,11 +10,11 @@ window.title("TNRIS DataHub Bulk Download Utility")
 # frame variables - parent is window
 top_frame = tk.Frame(window, borderwidth=20)
 middle_frame_1 = tk.Frame(window, borderwidth=20)
-middle_frame_2 = tk.Frame(window, borderwidth=20)
+# middle_frame_2 = tk.Frame(window, borderwidth=20)
 middle_frame_3 = tk.Frame(window, borderwidth=20)
 middle_frame_4 = tk.Frame(window, borderwidth=20)
 bottom_frame = tk.Frame(window, borderwidth=20)
-frame_list = [top_frame, middle_frame_1, middle_frame_2, middle_frame_3, middle_frame_4, bottom_frame]
+frame_list = [top_frame, middle_frame_1, middle_frame_3, middle_frame_4, bottom_frame]
 # for loop to pack all frames
 for frame in frame_list:
     frame.pack(fill='both')
@@ -23,9 +23,9 @@ for frame in frame_list:
 label_1 = tk.Label(top_frame, text="Enter a TNRIS DataHub Collection ID: ")
 label_2 = tk.Label(middle_frame_1, text="**Optional: Select the resource type you want to download from the Collection ID entered.")
 label_3 = tk.Label(middle_frame_1, text="If no selection is made, all resources for the collection will be downloaded.")
-label_4 = tk.Label(middle_frame_2, text="**Optional: Select a resource area type.")
-label_5 = tk.Label(middle_frame_2, text="If no selection is made, the default area type for the provided collection will be chosen.")
-label_list = [label_1, label_2, label_3, label_4, label_5]
+# label_4 = tk.Label(middle_frame_2, text="**Optional: Select a resource area type.")
+# label_5 = tk.Label(middle_frame_2, text="If no selection is made, the default area type for the provided collection will be chosen.")
+label_list = [label_1, label_2, label_3]
 # for loop to pack all labels
 for label in label_list:
     label.configure(font=('Courier', 11, 'bold'))
@@ -56,21 +56,21 @@ for type in type_list:
     type.pack(fill='both')
 
 # area type check box variables
-area_value = tk.StringVar()
-area_value.set("")
-area_1 = tk.Checkbutton(middle_frame_2, text="state", var=area_value, onvalue="state", offvalue="")
-area_2 = tk.Checkbutton(middle_frame_2, text="county", var=area_value, onvalue="county", offvalue="")
-area_3 = tk.Checkbutton(middle_frame_2, text="quad", var=area_value, onvalue="quad", offvalue="")
-area_4 = tk.Checkbutton(middle_frame_2, text="qquad", var=area_value, onvalue="qquad", offvalue="")
-area_list = [area_1, area_2, area_3, area_4]
-# for loop to pack all check boxes
-for area in area_list:
-    area.configure(font=('Courier', 11))
-    area.pack(fill='both')
+# area_value = tk.StringVar()
+# area_value.set("")
+# area_1 = tk.Checkbutton(middle_frame_2, text="state", var=area_value, onvalue="state", offvalue="")
+# area_2 = tk.Checkbutton(middle_frame_2, text="county", var=area_value, onvalue="county", offvalue="")
+# area_3 = tk.Checkbutton(middle_frame_2, text="quad", var=area_value, onvalue="quad", offvalue="")
+# area_4 = tk.Checkbutton(middle_frame_2, text="qquad", var=area_value, onvalue="qquad", offvalue="")
+# area_list = [area_1, area_2, area_3, area_4]
+# # for loop to pack all check boxes
+# for area in area_list:
+#     area.configure(font=('Courier', 11))
+#     area.pack(fill='both')
 
 # Progress bar widget
 progress = Progressbar(middle_frame_3, orient='horizontal')
-progress.pack(fill='both', pady=10)
+progress.pack(fill='both')
 # Progress bar config
 progress.config(mode='determinate', value=0, maximum=100)
 
@@ -100,34 +100,34 @@ def bulk_download():
     progress_value = 0
     c = collection_id.get()
     t = type_value.get()
-    a = area_value.get()
+    # a = area_value.get()
 
     # assign data variable based on checkbox selections (build the url string requests needs to get data from rest endpoint)
-    if not t and not a:
+    if not t:
         # if no selections made, build url string to get all resources for that collection id
         print('no selections made')
         data = requests.get(base_url + id_query + c).json()
-    elif t and a:
-        # if both type and area selections made, build the url string
-        print('both area and type selections made. type = {} and area = {}'.format(t,a))
-        '''
-        future enhancement to add and handle multiple selections for both type and area
-        '''
-        data = requests.get(base_url + id_query + c + type_abbr_query + t + area_query + a).json()
-    elif t and not a:
+    # elif t and a:
+    #     # if both type and area selections made, build the url string
+    #     print('both area and type selections made. type = {} and area = {}'.format(t,a))
+    #     '''
+    #     future enhancement to add and handle multiple selections for both type and area
+    #     '''
+    #     data = requests.get(base_url + id_query + c + type_abbr_query + t + area_query + a).json()
+    elif t:
         # if type selection made but not area, build the url string
         print('type selections made. type = {}'.format(t))
         '''
         future enhancement to add and handle multiple selections for type only
         '''
         data = requests.get(base_url + id_query + c + type_abbr_query + t).json()
-    elif a and not t:
-        # if area selection made but not type, build the url string
-        print('area selections made. area = {}'.format(a))
-        '''
-        future enhancement to add and handle multiple selections for area only
-        '''
-        data = requests.get(base_url + id_query + c + area_query + a).json()
+    # elif a and not t:
+    #     # if area selection made but not type, build the url string
+    #     print('area selections made. area = {}'.format(a))
+    #     '''
+    #     future enhancement to add and handle multiple selections for area only
+    #     '''
+    #     data = requests.get(base_url + id_query + c + area_query + a).json()
 
     # progress bar function
     def p_bar(value):
@@ -186,6 +186,6 @@ def bulk_download():
         middle_frame_4.update_idletasks()
 
 get_data = tk.Button(bottom_frame, text="Get Data", command=bulk_download, bg="#009933", fg="white", activebackground="green", activeforeground="white")
-get_data.pack(pady=20)
+get_data.pack()
 
 window.mainloop()
