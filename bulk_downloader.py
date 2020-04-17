@@ -6,7 +6,7 @@ import time, sys
 
 # master/parent window contains all gui elements
 window = tk.Tk()
-window.geometry("1300x750")
+window.geometry("1300x850")
 window.resizable(width=False,height=False)
 window.title("TNRIS DataHub Bulk Download Utility")
 
@@ -28,10 +28,9 @@ for frame in frame_list:
 
 # label variables
 label_1 = tk.Label(top_frame, text="Enter a TNRIS DataHub Collection ID: ")
-label_4 = tk.Label(top_frame, text="Browse to a directory where you would like to save your downloaded data.")
 label_2 = tk.Label(middle_frame_1, text="**Optional: Select the resource type you want to download from the Collection ID entered.")
 label_3 = tk.Label(middle_frame_1, text="If no selection is made, all resources for the collection will be downloaded.")
-label_list = [label_1, label_2, label_3, label_4]
+label_list = [label_1, label_2, label_3]
 # for loop to configure all labels with font
 for label in label_list:
     label.configure(font=('Courier', 9, 'bold'))
@@ -41,6 +40,10 @@ for label in label_list:
 collection_id = tk.Entry(top_frame, width=45, font=('Courier', 9))
 collection_id.pack()
 collection_id.focus()
+
+label_4 = tk.Label(top_frame, text="Browse to a directory where you would like to save your downloaded data.")
+label_4.configure(font=('Courier', 9, 'bold'))
+label_4.pack(fill='both')
 
 # resource types check box variables - onvalue string is used in the api query (resource_type_abbreviation)
 type_value = tk.StringVar()
@@ -147,7 +150,8 @@ def bulk_download():
                 # assign next object['resource'] url to file variable
                 file = requests.get(obj["resource"], stream=True)
                 # write file variable to actual local file to this projects data directory
-                open('{}/{}'.format(folder_path, obj['resource'].rsplit('/', 1)[-1]), 'wb').write(file.content)
+                print('folder_path variable print here:', str(folder_path))
+                open('{}/{}'.format(label_4.get(), obj['resource'].rsplit('/', 1)[-1]), 'wb').write(file.content)
                 # count each file written
                 count += 1
                 # update progress_value variable by dividing new count number by total api object count
@@ -180,8 +184,8 @@ def bulk_download():
         middle_frame_4.update_idletasks()
 
 # buttons that do stuff
-button_browse = tk.Button(top_frame, text="Browse", command=browse_button)
-button_browse.pack()
+browse = tk.Button(top_frame, text="Browse", command=browse_button)
+browse.pack()
 getdata_button = tk.Button(bottom_frame, text="Get Data", command=bulk_download, bg="#009933", fg="white", activebackground="green", activeforeground="white")
 getdata_button.pack()
 
