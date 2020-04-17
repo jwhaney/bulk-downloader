@@ -1,5 +1,6 @@
 import requests
 import tkinter as tk
+from tkinter import filedialog
 from tkinter.ttk import Progressbar
 import time, sys
 
@@ -27,11 +28,10 @@ for frame in frame_list:
 
 # label variables
 label_1 = tk.Label(top_frame, text="Enter a TNRIS DataHub Collection ID: ")
+label_4 = tk.Label(top_frame, text="Browse to a directory where you would like to save your downloaded data.")
 label_2 = tk.Label(middle_frame_1, text="**Optional: Select the resource type you want to download from the Collection ID entered.")
 label_3 = tk.Label(middle_frame_1, text="If no selection is made, all resources for the collection will be downloaded.")
-# label_4 = tk.Label(middle_frame_2, text="**Optional: Select a resource area type.")
-# label_5 = tk.Label(middle_frame_2, text="If no selection is made, the default area type for the provided collection will be chosen.")
-label_list = [label_1, label_2, label_3]
+label_list = [label_1, label_2, label_3, label_4]
 # for loop to configure all labels with font
 for label in label_list:
     label.configure(font=('Courier', 9, 'bold'))
@@ -79,6 +79,19 @@ message_area_list = [message_area_1, message_area_2, message_area_3]
 # for loop to pack message areas
 for area in message_area_list:
     area.pack(fill='both')
+
+folder_path = tk.StringVar()
+label_4 = tk.Label(top_frame, textvariable=folder_path)
+label_4.configure(font=('Courier', 9))
+label_4.pack(fill='both')
+
+def browse_button():
+    # Allow user to select a directory and store it in global var
+    # called folder_path
+    global folder_path
+    filename = filedialog.askdirectory()
+    folder_path.set(filename)
+    print(filename)
 
 # function to make requests to api.tnris.org resources endpoint to download data
 def bulk_download():
@@ -134,7 +147,7 @@ def bulk_download():
                 # assign next object['resource'] url to file variable
                 file = requests.get(obj["resource"], stream=True)
                 # write file variable to actual local file to this projects data directory
-                open('data/{}'.format(obj['resource'].rsplit('/', 1)[-1]), 'wb').write(file.content)
+                open('{}/{}'.format(folder_path, obj['resource'].rsplit('/', 1)[-1]), 'wb').write(file.content)
                 # count each file written
                 count += 1
                 # update progress_value variable by dividing new count number by total api object count
@@ -166,7 +179,10 @@ def bulk_download():
         # make sure message is updated
         middle_frame_4.update_idletasks()
 
-get_data = tk.Button(bottom_frame, text="Get Data", command=bulk_download, bg="#009933", fg="white", activebackground="green", activeforeground="white")
-get_data.pack()
+# buttons that do stuff
+button_browse = tk.Button(top_frame, text="Browse", command=browse_button)
+button_browse.pack()
+getdata_button = tk.Button(bottom_frame, text="Get Data", command=bulk_download, bg="#009933", fg="white", activebackground="green", activeforeground="white")
+getdata_button.pack()
 
 window.mainloop()
