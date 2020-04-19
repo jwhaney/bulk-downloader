@@ -6,7 +6,8 @@ import time, sys
 
 # master/parent window contains all gui elements
 window = tk.Tk()
-window.geometry("1300x850")
+# window.geometry("1300x850")
+window.maxsize(1300, 850)
 window.resizable(width=False,height=False)
 window.title("TNRIS DataHub Bulk Download Utility")
 
@@ -186,7 +187,9 @@ def bulk_download():
 # buttons that do stuff
 browse = tk.Button(top_frame, text="Browse", command=browse_button)
 browse.pack()
-getdata_button = tk.Button(bottom_frame, text="Get Data", command=bulk_download, bg="#009933", fg="white", activebackground="green", activeforeground="white")
+# on macos, button color doesn't seem to be properly reflected; comment out for now and use default color
+# getdata_button = tk.Button(bottom_frame, text="Get Data", command=bulk_download, bg="#009933", fg="white", activebackground="green", activeforeground="white")
+getdata_button = tk.Button(bottom_frame, text="Get Data", command=bulk_download)
 getdata_button.pack()
 
 window.mainloop()
