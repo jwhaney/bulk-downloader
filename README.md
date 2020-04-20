@@ -1,7 +1,7 @@
 # bulk-downloader
 ### __bulk download tnris datahub collection resources__
 
-![TNRIS DataHub Bulk Downloader Utility](/resources/img/bulk_downloader_gui_in-progress.png)
+![TNRIS DataHub Bulk Downloader Utility](/resources/bulk-downloader-linux.png)
 
 #### Description:
 The bulk downloader utility uses the TNRIS API Resource REST endpoints (https://api.tnris.org/api/v1/resources) which feeds data to the TNRIS DataHub (https://data.tnris.org) application. This utility allows bulk download of a collection's resources bypassing the need to click each area type (county, quad, qquad) polygon in the DataHub collection download map.
