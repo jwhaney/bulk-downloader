@@ -189,7 +189,7 @@ browse = tk.Button(top_frame, text="Browse", command=browse_button)
 browse.pack()
 # on macos, button color doesn't seem to be properly reflected; comment out for now and use default color
 # getdata_button = tk.Button(bottom_frame, text="Get Data", command=bulk_download, bg="#009933", fg="white", activebackground="green", activeforeground="white")
-getdata_button = tk.Button(bottom_frame, text="Get Data", command=bulk_download)
-getdata_button.pack()
+getdata = tk.Button(bottom_frame, text="Get Data", command=bulk_download)
+getdata.pack()
 
 window.mainloop()
