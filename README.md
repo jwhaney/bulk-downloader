@@ -4,7 +4,7 @@
 ### description
 The bulk downloader utility uses the TNRIS API REST endpoint for DataHub resources (https://api.tnris.org/api/v1/resources) which feeds AWS S3 url links for data to the TNRIS DataHub (https://data.tnris.org) application. This utility allows bulk download of a collection's resources, bypassing the need to click each area type (county, quad, qquad) polygon in the download map.
 
-<img src="/resources/bulk-downloader-linux.png" width="500">
+<img src="/resources/images/bulk-downloader-linux.png" width="500">
 
 ### instructions
 
