@@ -12,7 +12,7 @@ window.resizable(width=False,height=False)
 window.title("TNRIS DataHub Bulk Download Utility")
 
 # frame variables - parent is window
-top_frame = tk.Frame(window, borderwidth=20)
+top_frame = tk.Frame(window, borderwidth=20, pady=10)
 middle_frame_1 = tk.Frame(window, borderwidth=20)
 middle_frame_2 = tk.Frame(window, borderwidth=20)
 middle_left_frame_2 = tk.Frame(middle_frame_2, borderwidth=10)
@@ -21,7 +21,7 @@ middle_right_frame_2 = tk.Frame(middle_frame_2, borderwidth=10)
 middle_right_frame_2.grid(column=1,row=1)
 middle_frame_3 = tk.Frame(window, borderwidth=20)
 middle_frame_4 = tk.Frame(window, borderwidth=20)
-bottom_frame = tk.Frame(window, borderwidth=20)
+bottom_frame = tk.Frame(window, borderwidth=20, pady=10)
 frame_list = [top_frame, middle_frame_1, middle_frame_2, middle_frame_3, middle_frame_4, bottom_frame]
 # for loop to pack all frames
 for frame in frame_list:
@@ -90,8 +90,7 @@ label_4.configure(font=('Courier', 9))
 label_4.pack(fill='both')
 
 def browse_button():
-    # Allow user to select a directory and store it in global var
-    # called folder_path
+    # Allow user to select a directory and store it in global var called folder_path
     global folder_path
     filename = filedialog.askdirectory()
     folder_path.set(filename)
@@ -132,66 +131,78 @@ def bulk_download():
     # progress bar function
     def p_bar(value):
         progress['value'] = value
-        middle_frame_3.update_idletasks()
+        progress.update_idletasks()
 
-    # loop through all object resources for a collection id and save them to file using same name as s3 .zip name
-    # also update progress bar feedback for user to see progress
-    if data['count'] > 0:
-        # api data count variables - string and integer
-        api_str_count = str(data['count'])
-        api_num_count = data['count']
+    # 1) make sure data download directory (folder_path variable) is provided; else throw error message
+    # 2) check to make sure the collection id string provided actually has api results
+    # 3) loop through all object resources for the provided collection and save them to file using same name as s3 .zip
+    # 4) update the progress bar and message feedback for user to see progress as files are being downloaded
+    if folder_path.get():
+        if data['count'] > 0:
+            # api data count variables - string and integer
+            api_str_count = str(data['count'])
+            api_num_count = data['count']
 
-        # show user how many collection resources returned from query
-        display_message_1.set("{} resources found for tnris collection id {}".format(data['count'],c))
-        middle_frame_4.update_idletasks()
-        time.sleep(1)
-        print("beginning dowload process")
+            # show user how many collection resources returned from query
+            display_message_1.set("{} resources found for tnris collection id {}".format(data['count'],c))
+            message_area_1.update_idletasks()
+            time.sleep(1)
+            print("beginning dowload process")
 
-        for obj in data['results']:
-            try:
-                print("downloading resource id: {}".format(obj['resource'].rsplit('/', 1)[-1]))
-                # assign next object['resource'] url to file variable
-                file = requests.get(obj["resource"], stream=True)
-                # write file variable to actual local file to this projects data directory
-                print('folder_path variable print here:', folder_path.get())
-                open('{}/{}'.format(folder_path.get(), obj['resource'].rsplit('/', 1)[-1]), 'wb').write(file.content)
-                # count each file written
-                count += 1
-                # update progress_value variable by dividing new count number by total api object count
-                progress_value = round((count/api_num_count)*100)
-                print(progress_value)
-                # feed new progress value into p_bar function to update gui
-                p_bar(progress_value)
-                # show display message as progress percentage string
-                display_message_1.set("{}/{} resources downloaded".format(count, api_str_count))
-                display_message_2.set("download progress: " + str(progress_value) + "%")
-                # make sure message is updated
-                middle_frame_4.update_idletasks()
-            except requests.ConnectionError:
-                print("requests connection error")
-                error_message.set("requests connection error")
-            except requests.ConnectTimeout:
-                print("requests timeout error")
-                error_message.set("requests timeout error")
+            for obj in data['results']:
+                try:
+                    print("downloading resource id: {}".format(obj['resource'].rsplit('/', 1)[-1]))
+                    # assign next object['resource'] url to file variable
+                    file = requests.get(obj["resource"], stream=True)
+                    # write file variable to actual local file to this projects data directory
+                    open('{}/{}'.format(folder_path.get(), obj['resource'].rsplit('/', 1)[-1]), 'wb').write(file.content)
+                    # count each file written
+                    count += 1
+                    # update progress_value variable by dividing new count number by total api object count
+                    progress_value = round((count/api_num_count)*100)
+                    print(str(progress_value) + '% downloaded')
+                    # feed new progress value into p_bar function to update gui
+                    p_bar(progress_value)
+                    # show display message/text as progress percentage string
+                    display_message_1.set("{}/{} resources downloaded".format(count, api_str_count))
+                    display_message_2.set("download progress: " + str(progress_value) + "%")
+                    # make sure message area/labels are updated
+                    message_area_1.update_idletasks()
+                    message_area_2.update_idletasks()
+                except requests.ConnectionError:
+                    print("requests connection error")
+                    error_message.set("requests connection error")
+                    # update error message area/label
+                    message_area_3.update_idletasks()
+                except requests.ConnectTimeout:
+                    print("requests timeout error")
+                    error_message.set("requests timeout error")
+                    # update error message area/label
+                    message_area_3.update_idletasks()
 
-        print("Script process completed. {} out of {} resource(s) successfully downloaded.".format(count, api_str_count))
-        display_message_1.set("Script process completed. {} out of {} resource(s) successfully downloaded.".format(count, api_str_count))
-        # make sure message is updated
-        middle_frame_4.update_idletasks()
+            print("Script process completed. {} out of {} resource(s) successfully downloaded.".format(count, api_str_count))
+            display_message_1.set("Script process completed. {} out of {} resource(s) successfully downloaded.".format(count, api_str_count))
+            # update message area/label
+            message_area_1.update_idletasks()
 
+        else:
+            # return a message to the user that there is an error with either the  collection id string or filters applied
+            print("No resource results. Please check your collection id string or filters applied.")
+            error_message.set("No resource results. Please check your collection id string or filters applied.")
+            # update error message/label
+            message_area_3.update_idletasks()
     else:
-        # return a message to the user that there is an error with either the  collection id string or filters applied
-        print("ERROR. No resource results. Please check your collection id string or filters applied.")
-        error_message.set("ERROR. No resource results. Please check your collection id string or filters applied.")
-        # make sure message is updated
-        middle_frame_4.update_idletasks()
+        print("No directory provided to save downloaded data. This input is required.")
+        error_message.set("No directory provided to save downloaded data. This input is required.")
+        # update error message/label
+        message_area_3.update_idletasks()
 
 # buttons that do stuff
-browse = tk.Button(top_frame, text="Browse", command=browse_button, pady=10)
+browse = tk.Button(top_frame, text="Browse", command=browse_button)
 browse.pack()
 # on macos, button color doesn't seem to be properly reflected; comment out for now and use default color
 # getdata_button = tk.Button(bottom_frame, text="Get Data", command=bulk_download, bg="#009933", fg="white", activebackground="green", activeforeground="white")
-getdata = tk.Button(bottom_frame, text="Get Data", command=bulk_download, pady=10)
+getdata = tk.Button(bottom_frame, text="Get Data", command=bulk_download)
 getdata.pack()
 
 window.mainloop()
