@@ -7,7 +7,7 @@ import time, sys
 # master/parent window contains all gui elements
 window = tk.Tk()
 # window.geometry("1300x850")
-window.maxsize(1300, 850)
+window.maxsize(1300, 900)
 window.resizable(width=False,height=False)
 window.title("TNRIS DataHub Bulk Download Utility")
 
@@ -43,7 +43,7 @@ collection_id.pack()
 collection_id.focus()
 
 label_4 = tk.Label(top_frame, text="Browse to a directory where you would like to save your downloaded data.")
-label_4.configure(font=('Courier', 9, 'bold'))
+label_4.configure(font=('Courier', 9, 'bold'), pady=10)
 label_4.pack(fill='both')
 
 # resource types check box variables - onvalue string is used in the api query (resource_type_abbreviation)
@@ -53,13 +53,13 @@ type_1 = tk.Checkbutton(middle_left_frame_2, text="Lidar Point Cloud", var=type_
 type_2 = tk.Checkbutton(middle_left_frame_2, text="Hypsography", var=type_value, onvalue="HYPSO", offvalue="")
 type_3 = tk.Checkbutton(middle_left_frame_2, text="Digital Elevation Model", var=type_value, onvalue="DEM", offvalue="")
 type_4 = tk.Checkbutton(middle_left_frame_2, text="Land Cover", var=type_value, onvalue="LC", offvalue="")
-type_5 = tk.Checkbutton(middle_left_frame_2, text="Vector", var=type_value, onvalue="VECTOR", offvalue="")
+# type_5 = tk.Checkbutton(middle_left_frame_2, text="Vector", var=type_value, onvalue="VECTOR", offvalue="")
 type_6 = tk.Checkbutton(middle_right_frame_2, text="Color Infrared (3 Band)", var=type_value, onvalue="CIR", offvalue="")
 type_7 = tk.Checkbutton(middle_right_frame_2, text="Natural Color (3 Band)", var=type_value, onvalue="NC", offvalue="")
 type_8 = tk.Checkbutton(middle_right_frame_2, text="Natural Color/Color Infrared (4 Band)", var=type_value, onvalue="NC-CIR", offvalue="")
 type_9 = tk.Checkbutton(middle_right_frame_2, text="Black & White (1 Band)", var=type_value, onvalue="BW", offvalue="")
-type_10 = tk.Checkbutton(middle_right_frame_2, text="Map", var=type_value, onvalue="MAP", offvalue="")
-type_list = [type_1, type_2, type_3, type_4, type_5, type_6, type_7, type_8, type_9, type_10]
+# type_10 = tk.Checkbutton(middle_right_frame_2, text="Map", var=type_value, onvalue="MAP", offvalue="")
+type_list = [type_1, type_2, type_3, type_4, type_6, type_7, type_8, type_9]
 # for loop to configure all checkbuttons with font
 for type in type_list:
     type.configure(font=('Courier', 9))
@@ -95,14 +95,14 @@ def browse_button():
     global folder_path
     filename = filedialog.askdirectory()
     folder_path.set(filename)
-    print(filename)
+    print('folder_path variable:', folder_path.get())
 
 # function to make requests to api.tnris.org resources endpoint to download data
 def bulk_download():
     # variables
-    display_message_1.set("Messages here provide download progress feedback.")
-    display_message_2.set("")
-    error_message.set("")
+    display_message_1.set("Messages here provide download progress feedback.") # reset feedback message
+    display_message_2.set("") # reset feedback message
+    error_message.set("") # reset any error messages
     base_url = "https://api.tnris.org/api/v1/resources/"
     id_query = "?collection_id="
     type_query = "&resource_type_name="
@@ -113,6 +113,8 @@ def bulk_download():
     progress_value = 0
     c = collection_id.get()
     t = type_value.get()
+
+    # print('folder_path variable = ', folder_path)
 
     # assign data variable based on checkbox selections (build the url string requests needs to get data from rest endpoint)
     if c and not t:
@@ -151,8 +153,8 @@ def bulk_download():
                 # assign next object['resource'] url to file variable
                 file = requests.get(obj["resource"], stream=True)
                 # write file variable to actual local file to this projects data directory
-                print('folder_path variable print here:', str(folder_path))
-                open('{}/{}'.format(label_4.get(), obj['resource'].rsplit('/', 1)[-1]), 'wb').write(file.content)
+                print('folder_path variable print here:', folder_path.get())
+                open('{}/{}'.format(folder_path.get(), obj['resource'].rsplit('/', 1)[-1]), 'wb').write(file.content)
                 # count each file written
                 count += 1
                 # update progress_value variable by dividing new count number by total api object count
@@ -185,11 +187,11 @@ def bulk_download():
         middle_frame_4.update_idletasks()
 
 # buttons that do stuff
-browse = tk.Button(top_frame, text="Browse", command=browse_button)
+browse = tk.Button(top_frame, text="Browse", command=browse_button, pady=10)
 browse.pack()
 # on macos, button color doesn't seem to be properly reflected; comment out for now and use default color
 # getdata_button = tk.Button(bottom_frame, text="Get Data", command=bulk_download, bg="#009933", fg="white", activebackground="green", activeforeground="white")
-getdata = tk.Button(bottom_frame, text="Get Data", command=bulk_download)
+getdata = tk.Button(bottom_frame, text="Get Data", command=bulk_download, pady=10)
 getdata.pack()
 
 window.mainloop()
