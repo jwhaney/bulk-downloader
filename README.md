@@ -1,20 +1,32 @@
 # bulk-downloader
 ### __bulk download tnris datahub collection resources__
 
-#### description:
+### description
 The bulk downloader utility uses the TNRIS API REST endpoint for DataHub resources (https://api.tnris.org/api/v1/resources) which feeds AWS S3 url links for data to the TNRIS DataHub (https://data.tnris.org) application. This utility allows bulk download of a collection's resources, bypassing the need to click each area type (county, quad, qquad) polygon in the download map.
 
 <img src="/resources/bulk-downloader-linux.png" width="500">
 
 ### instructions
-#### option 1 - setup local environment and run the utility from the terminal
+
+#### option 1 (easiest) - find the executable for your operating system and run the native application
+
+__*currently being developed. standby....*__
+
+1. hit the green *Clone or Download* button in this repo (upper right side). if you are already familiar with git and gitHub, you can choose to clone the repo to local like you would normally and skip to #3.
+2. click *Download ZIP*
+3. once you've downloaded the repo, you will need to extract the project files from the repo zip file (should be in your *Downloads* folder called bulk-downloader-master.zip). at this time you can choose to extract the files wherever you like.
+4. navigate inside the project directory and then into the __*dist/*__ folder which is where the executables for the three main operating systems exist. find your os and go inside that directory.
+5. double click the executable to run the program.
+
+
+#### option 2 - setup local environment and run the utility from the terminal
 
 1. hit the green *Clone or Download* button in this repo (upper right side). if you are already familiar with git and gitHub, then just clone the repo to local and skip to #4.
 2. click *Download ZIP*. you will need to extract the downloaded .zip file to where you want your project to reside. the downloaded .zip file will be called __bulk-downloader-master.zip__.
 3. __*optional*__ - create a virtual environment for the bulk-downloader to isolate the requirements.
 4. open terminal and cd into your project folder - `cd tnris-bulk-downloader`
 5. run `pip install -r requirements.txt`
-6. run `python3 bulk_downloader.py`
+6. `cd src` and then run `python3 bulk_downloader.py` to start the script.
 7. you should now see a graphical user interface (gui). paste the tnris datahub collection id you want to bulk download data for at the top.
     - to find the collection id you want, go to data.tnris.org and find the dataset
     - when you find it, look in your browser url window and copy the last part of the url after `collection/`
