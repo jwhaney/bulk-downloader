@@ -10,7 +10,7 @@ The bulk downloader utility uses the TNRIS API REST endpoint for DataHub resourc
 
 #### option 1 (easiest) - find the executable for your operating system and run the native application
 
-__*currently being developed. standby....*__
+<span style="color:red;">option 1 is currently under construction ---- in progress. standby....</span>
 
 1. hit the green *Clone or Download* button in this repo (upper right side). if you are already familiar with git and gitHub, you can choose to clone the repo to local like you would normally and skip to #3.
 2. click *Download ZIP*
