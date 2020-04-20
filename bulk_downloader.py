@@ -12,7 +12,7 @@ window.resizable(width=False,height=False)
 window.title("TNRIS DataHub Bulk Download Utility")
 
 # frame variables - parent is window
-top_frame = tk.Frame(window, borderwidth=20)
+top_frame = tk.Frame(window, borderwidth=20, pady=10)
 middle_frame_1 = tk.Frame(window, borderwidth=20)
 middle_frame_2 = tk.Frame(window, borderwidth=20)
 middle_left_frame_2 = tk.Frame(middle_frame_2, borderwidth=10)
@@ -21,7 +21,7 @@ middle_right_frame_2 = tk.Frame(middle_frame_2, borderwidth=10)
 middle_right_frame_2.grid(column=1,row=1)
 middle_frame_3 = tk.Frame(window, borderwidth=20)
 middle_frame_4 = tk.Frame(window, borderwidth=20)
-bottom_frame = tk.Frame(window, borderwidth=20)
+bottom_frame = tk.Frame(window, borderwidth=20, pady=10)
 frame_list = [top_frame, middle_frame_1, middle_frame_2, middle_frame_3, middle_frame_4, bottom_frame]
 # for loop to pack all frames
 for frame in frame_list:
@@ -153,7 +153,6 @@ def bulk_download():
                 # assign next object['resource'] url to file variable
                 file = requests.get(obj["resource"], stream=True)
                 # write file variable to actual local file to this projects data directory
-                print('folder_path variable print here:', folder_path.get())
                 open('{}/{}'.format(folder_path.get(), obj['resource'].rsplit('/', 1)[-1]), 'wb').write(file.content)
                 # count each file written
                 count += 1
@@ -187,11 +186,11 @@ def bulk_download():
         middle_frame_4.update_idletasks()
 
 # buttons that do stuff
-browse = tk.Button(top_frame, text="Browse", command=browse_button, pady=10)
+browse = tk.Button(top_frame, text="Browse", command=browse_button)
 browse.pack()
 # on macos, button color doesn't seem to be properly reflected; comment out for now and use default color
 # getdata_button = tk.Button(bottom_frame, text="Get Data", command=bulk_download, bg="#009933", fg="white", activebackground="green", activeforeground="white")
-getdata = tk.Button(bottom_frame, text="Get Data", command=bulk_download, pady=10)
+getdata = tk.Button(bottom_frame, text="Get Data", command=bulk_download)
 getdata.pack()
 
 window.mainloop()
