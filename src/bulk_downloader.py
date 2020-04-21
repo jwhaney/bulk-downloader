@@ -131,9 +131,11 @@ def bulk_download():
     """
     main logic
     1) make sure data download directory (folder_path variable) is provided; else throw error message
-    2) check to make sure the collection id string provided actually has api results
+    2) check to make sure the collection id string is correctly entered and there are no incorrect type filters applied
+       so that the request actually has api results - based on the api request count > 0.
     3) loop through all object resources for the provided collection and save them to file using same name as s3 .zip
     4) update the progress bar and message feedback for user to see progress as files are being downloaded
+    5) throw any specific requests library exceptions / errors to the user for feedback
     """
     if folder_path.get():
         if data['count'] > 0:
