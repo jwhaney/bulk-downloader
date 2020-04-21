@@ -6,7 +6,6 @@ import time, sys
 
 # master/parent window contains all gui elements
 window = tk.Tk()
-# window.geometry("1300x850")
 window.maxsize(1300, 900)
 window.resizable(width=False,height=False)
 window.title("TNRIS DataHub Bulk Download Utility")
@@ -53,13 +52,11 @@ type_1 = tk.Checkbutton(middle_left_frame_2, text="Lidar Point Cloud", var=type_
 type_2 = tk.Checkbutton(middle_left_frame_2, text="Hypsography", var=type_value, onvalue="HYPSO", offvalue="")
 type_3 = tk.Checkbutton(middle_left_frame_2, text="Digital Elevation Model", var=type_value, onvalue="DEM", offvalue="")
 type_4 = tk.Checkbutton(middle_left_frame_2, text="Land Cover", var=type_value, onvalue="LC", offvalue="")
-# type_5 = tk.Checkbutton(middle_left_frame_2, text="Vector", var=type_value, onvalue="VECTOR", offvalue="")
-type_6 = tk.Checkbutton(middle_right_frame_2, text="Color Infrared (3 Band)", var=type_value, onvalue="CIR", offvalue="")
-type_7 = tk.Checkbutton(middle_right_frame_2, text="Natural Color (3 Band)", var=type_value, onvalue="NC", offvalue="")
-type_8 = tk.Checkbutton(middle_right_frame_2, text="Natural Color/Color Infrared (4 Band)", var=type_value, onvalue="NC-CIR", offvalue="")
-type_9 = tk.Checkbutton(middle_right_frame_2, text="Black & White (1 Band)", var=type_value, onvalue="BW", offvalue="")
-# type_10 = tk.Checkbutton(middle_right_frame_2, text="Map", var=type_value, onvalue="MAP", offvalue="")
-type_list = [type_1, type_2, type_3, type_4, type_6, type_7, type_8, type_9]
+type_5 = tk.Checkbutton(middle_right_frame_2, text="Color Infrared (3 Band)", var=type_value, onvalue="CIR", offvalue="")
+type_6 = tk.Checkbutton(middle_right_frame_2, text="Natural Color (3 Band)", var=type_value, onvalue="NC", offvalue="")
+type_7 = tk.Checkbutton(middle_right_frame_2, text="Natural Color/Color Infrared (4 Band)", var=type_value, onvalue="NC-CIR", offvalue="")
+type_8 = tk.Checkbutton(middle_right_frame_2, text="Black & White (1 Band)", var=type_value, onvalue="BW", offvalue="")
+type_list = [type_1, type_2, type_3, type_4, type_5, type_6, type_7, type_8]
 # for loop to configure all checkbuttons with font
 for type in type_list:
     type.configure(font=('Courier', 9))
@@ -113,8 +110,6 @@ def bulk_download():
     c = collection_id.get()
     t = type_value.get()
 
-    # print('folder_path variable = ', folder_path)
-
     # assign data variable based on checkbox selections (build the url string requests needs to get data from rest endpoint)
     if c and not t:
         # if no selections made, build url string to get all resources for that collection id
@@ -122,21 +117,24 @@ def bulk_download():
         data = requests.get(base_url + id_query + c).json()
     elif c and t:
         # if type selection made but not area, build the url string
-        print('type selections made. type = {}'.format(t))
+        print('type selection made. type = {}'.format(t))
         '''
-        future enhancement to add and handle multiple selections for type only
+        possible future enhancement here to add ability to handle multiple resource type filters
         '''
         data = requests.get(base_url + id_query + c + type_abbr_query + t).json()
 
-    # progress bar function
+    # progress bar update function
     def p_bar(value):
         progress['value'] = value
         progress.update_idletasks()
 
-    # 1) make sure data download directory (folder_path variable) is provided; else throw error message
-    # 2) check to make sure the collection id string provided actually has api results
-    # 3) loop through all object resources for the provided collection and save them to file using same name as s3 .zip
-    # 4) update the progress bar and message feedback for user to see progress as files are being downloaded
+    """
+    main logic
+    1) make sure data download directory (folder_path variable) is provided; else throw error message
+    2) check to make sure the collection id string provided actually has api results
+    3) loop through all object resources for the provided collection and save them to file using same name as s3 .zip
+    4) update the progress bar and message feedback for user to see progress as files are being downloaded
+    """
     if folder_path.get():
         if data['count'] > 0:
             # api data count variables - string and integer
@@ -186,9 +184,9 @@ def bulk_download():
             message_area_1.update_idletasks()
 
         else:
-            # return a message to the user that there is an error with either the  collection id string or filters applied
-            print("No resource results. Please check your collection id string or filters applied.")
-            error_message.set("No resource results. Please check your collection id string or filters applied.")
+            # return a message to the user that there is an error with either the  collection id string or the filter applied
+            print("No resource results. Please check your collection id string or the filter applied.")
+            error_message.set("No resource results. Please check your collection id string or the filter applied.")
             # update error message/label
             message_area_3.update_idletasks()
     else:
@@ -204,5 +202,5 @@ browse.pack()
 # getdata_button = tk.Button(bottom_frame, text="Get Data", command=bulk_download, bg="#009933", fg="white", activebackground="green", activeforeground="white")
 getdata = tk.Button(bottom_frame, text="Get Data", command=bulk_download)
 getdata.pack()
-
+# fire tkinter mainloop() on window to run the program
 window.mainloop()
