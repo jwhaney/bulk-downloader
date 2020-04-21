@@ -20,6 +20,7 @@ The bulk downloader utility uses the TNRIS API REST endpoint for DataHub resourc
 1. double click the executable file to run the program on your system.
 
 **Important Note**: do not move the executable file from its native location in the project. this might either corrupt the application or make it not work at all. instead, you can create a shortcut if you like that links to the executable file in this project. that shortcut can reside on your desktop or wherever. here are some resources that might help with the process:
+
     - [Create a shortcut on Windows 10](https://www.minitool.com/news/create-desktop-shortcut-windows-10-004.html)
     - [Create a shortcut on macos Catalina](https://www.igeeksblog.com/how-to-make-desktop-shortcuts-on-mac/)
     - [Create a shortcut on Linux/Ubuntu](https://itsfoss.com/ubuntu-desktop-shortcut/)
