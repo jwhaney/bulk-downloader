@@ -10,7 +10,7 @@ The bulk downloader utility uses the TNRIS API REST endpoint for DataHub resourc
 
 #### option 1 (easiest) - find the executable for your operating system and run the native application
 
-1. click the `exe/` directory to view the pre-built available executables for this desktop application.
+1. the `exe/` directory contains pre-built and compressed executables for each main operating system (linux, mac, windows).
 1. download the .zip file that most closely applies to your operating system.
     - if you are already familiar with git and gitHub, you can choose to clone the repo to local like you would normally.
 1. once you've either cloned the repo or downloaded the executable .zip, you will need to extract the project files from the repo executable zip file (should be in your *Downloads* folder called bulk-downloader-master.zip). at this time you can choose to extract the files wherever you like on your system.
@@ -18,7 +18,10 @@ The bulk downloader utility uses the TNRIS API REST endpoint for DataHub resourc
     - there are a lot of files inside this directory, and depending on which executable you download, it might not be immediately obvious which file to use.
     - find the file called __*bulk_downloader*__ that has a file size of about __*1.7MB*__ .
 1. double click the executable file to run the program on your system.
-**Important Note**: do not move the executable file from its native location in the project. instead, you can create a shortcut if you would like that links to the executable file in this project. that shortcut can reside on your desktop or wherever.
+**Important Note**: do not move the executable file from its native location in the project. this might either corrupt the application or make it not work at all. instead, you can create a shortcut if you like that links to the executable file in this project. that shortcut can reside on your desktop or wherever. here are some resources that might help with the process:
+    - [Create a shortcut on Windows 10](https://www.minitool.com/news/create-desktop-shortcut-windows-10-004.html)
+    - [Create a shortcut on macos Catalina](https://www.igeeksblog.com/how-to-make-desktop-shortcuts-on-mac/)
+    - [Create a shortcut on Linux/Ubuntu](https://itsfoss.com/ubuntu-desktop-shortcut/)
 
 
 #### option 2 - setup local environment and run the utility from the terminal
