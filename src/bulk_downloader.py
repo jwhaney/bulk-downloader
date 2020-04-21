@@ -167,7 +167,7 @@ def bulk_download():
                     # make sure message area/labels are updated
                     message_area_1.update_idletasks()
                     message_area_2.update_idletasks()
-                # requests library exception to catch any errors getting data from the api
+                # sepcific requests library exceptions to catch errors getting data from the api
                 except requests.exceptions.HTTPError as http_error:
                     print ("http error:", http_error)
                     error_message.set("http error: ", http_error)
@@ -180,6 +180,7 @@ def bulk_download():
                     print ("timeout error:", timeout_error)
                     error_message.set("timeout error: ", timeout_error)
                     message_area_3.update_idletasks()
+                # general catch all requests library exception to catch an error if it is outside the above exceptions
                 except requests.exceptions.RequestException as general_error:
                     print ("OOps, there was some error: ", general_error)
                     error_message.set("OOps, there was some error: ", general_error)
