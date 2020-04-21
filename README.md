@@ -18,6 +18,7 @@ The bulk downloader utility uses the TNRIS API REST endpoint for DataHub resourc
     - there are a lot of files inside this directory, and depending on which executable you download, it might not be immediately obvious which file to use.
     - find the file called __*bulk_downloader*__ that has a file size of about __*1.7MB*__ .
 1. double click the executable file to run the program on your system.
+
 **Important Note**: do not move the executable file from its native location in the project. this might either corrupt the application or make it not work at all. instead, you can create a shortcut if you like that links to the executable file in this project. that shortcut can reside on your desktop or wherever. here are some resources that might help with the process:
     - [Create a shortcut on Windows 10](https://www.minitool.com/news/create-desktop-shortcut-windows-10-004.html)
     - [Create a shortcut on macos Catalina](https://www.igeeksblog.com/how-to-make-desktop-shortcuts-on-mac/)
