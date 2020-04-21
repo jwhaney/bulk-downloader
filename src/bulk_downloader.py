@@ -167,15 +167,22 @@ def bulk_download():
                     # make sure message area/labels are updated
                     message_area_1.update_idletasks()
                     message_area_2.update_idletasks()
-                except requests.ConnectionError:
-                    print("requests connection error")
-                    error_message.set("requests connection error")
-                    # update error message area/label
+                # requests library exception to catch any errors getting data from the api
+                except requests.exceptions.HTTPError as http_error:
+                    print ("http error:", http_error)
+                    error_message.set("http error: ", http_error)
                     message_area_3.update_idletasks()
-                except requests.ConnectTimeout:
-                    print("requests timeout error")
-                    error_message.set("requests timeout error")
-                    # update error message area/label
+                except requests.exceptions.ConnectionError as connection_error:
+                    print ("error connecting:", connection_error)
+                    error_message.set("error connecting: ", connection_error)
+                    message_area_3.update_idletasks()
+                except requests.exceptions.Timeout as timeout_error:
+                    print ("timeout error:", timeout_error)
+                    error_message.set("timeout error: ", timeout_error)
+                    message_area_3.update_idletasks()
+                except requests.exceptions.RequestException as general_error:
+                    print ("OOps, there was some error: ", general_error)
+                    error_message.set("OOps, there was some error: ", general_error)
                     message_area_3.update_idletasks()
 
             print("Script process completed. {} out of {} resource(s) successfully downloaded.".format(count, api_str_count))
