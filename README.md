@@ -10,13 +10,15 @@ The bulk downloader utility uses the TNRIS API REST endpoint for DataHub resourc
 
 #### option 1 (easiest) - find the executable for your operating system and run the native application
 
-##### option 1 is currently under construction ---- in progress. please standby.... until then, refer to option #2.
-
-1. hit the green *Clone or Download* button in this repo (upper right side). if you are already familiar with git and gitHub, you can choose to clone the repo to local like you would normally and skip to #3.
-2. click *Download ZIP*
-3. once you've downloaded the repo, you will need to extract the project files from the repo zip file (should be in your *Downloads* folder called bulk-downloader-master.zip). at this time you can choose to extract the files wherever you like.
-4. navigate inside the project directory and then into the __*dist/*__ folder which is where the executables for the three main operating systems exist. find your os and go inside that directory.
-5. double click the executable to run the program.
+1. click the `exe/` directory to view the pre-built available executables for this desktop application.
+1. download the .zip file that most closely applies to your operating system.
+    - if you are already familiar with git and gitHub, you can choose to clone the repo to local like you would normally.
+1. once you've either cloned the repo or downloaded the executable .zip, you will need to extract the project files from the repo executable zip file (should be in your *Downloads* folder called bulk-downloader-master.zip). at this time you can choose to extract the files wherever you like on your system.
+1. navigate inside the executable directory you just unzipped, then into __*dist/bulk_downloader/*__ which is where the executable file exists called __*bulk_downloader*__ .
+    - there are a lot of files inside this directory, and depending on which executable you download, it might not be immediately obvious which file to use.
+    - find the file called __*bulk_downloader*__ that has a file size of about __*1.7MB*__ .
+1. double click the executable file to run the program on your system.
+**Important Note**: do not move the executable file from its native location in the project. instead, you can create a shortcut if you would like that links to the executable file in this project. that shortcut can reside on your desktop or wherever.
 
 
 #### option 2 - setup local environment and run the utility from the terminal
