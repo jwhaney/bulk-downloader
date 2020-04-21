@@ -8,7 +8,7 @@ The bulk downloader utility uses the TNRIS API REST endpoint for DataHub resourc
 
 ## instructions
 
-### option 1 (easiest) - find the executable for your operating system and run the native application
+### option 1 (easiest) - find and download the executable for your operating system
 
 1. the `exe/` directory contains pre-built and compressed/zipped executables for each main operating system (linux, mac, windows).
 1. download the .zip file that most closely applies to your operating system.
