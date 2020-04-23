@@ -2,9 +2,12 @@
 ### __bulk download tnris datahub collection resources__
 
 ### description
-The bulk downloader utility uses the TNRIS API REST endpoint for DataHub resources (https://api.tnris.org/api/v1/resources) which feeds AWS S3 url links for data to the TNRIS DataHub (https://data.tnris.org) application. This utility allows bulk download of a collection's resources, bypassing the need to click each area type (county, quad, qquad) polygon in the download map.
+the bulk downloader utility uses the publicly available tnris api rest endpoint for datahub resources (https://api.tnris.org/api/v1/resources). the rest endpoint feeds amazon web services (aws) s3 url links for compressed data to the tnris datahub (https://data.tnris.org) web application. this utility allows bulk download of a datahub collection's resources, bypassing the need to click each area polygon in the download map.
 
 <img src="/resources/images/bulk-downloader-linux.png" width="500">
+
+## recommendation
+it is recommended, especially if you plan to download large collections/datasets such as lidar, that you save the data in a location that has plenty of disk/storage space. an external hard drive is ideal. however, if you'd like to store the data locally on your computer, just be sure you have enough disk/storage space before you run this utility. otherwise, you may encounter errors that the program does not anticipate.
 
 ## instructions
 
