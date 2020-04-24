@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 from tkinter.ttk import Progressbar
+from tkinter import messagebox
 import requests
 import time, sys, os
 from datetime import datetime
@@ -24,17 +25,13 @@ middle_right_frame_2.grid(column=1,row=1)
 middle_frame_3 = tk.Frame(window, borderwidth=20)
 middle_frame_4 = tk.Frame(window, borderwidth=20)
 bottom_frame = tk.Frame(window, borderwidth=20, pady=10)
-bottom_frame_left = tk.Frame(bottom_frame, borderwidth=10)
-bottom_frame_right = tk.Frame(bottom_frame, borderwidth=10)
 frame_list = [
               top_frame,
               middle_frame_1,
               middle_frame_2,
               middle_frame_3,
               middle_frame_4,
-              bottom_frame,
-              bottom_frame_left,
-              bottom_frame_right
+              bottom_frame
               ]
 # for loop to pack all frames
 for frame in frame_list:
@@ -113,9 +110,14 @@ def browse_button():
     folder_path.set(filename)
     print('folder_path variable:', folder_path.get())
 
+# variable to be used for stop/kill function button
+# after_id = None
+# sec = 0
+
 # function to make requests to api.tnris.org resources endpoint to download data
 def bulk_download():
     # variables
+    running = True
     display_message_1.set("Messages here provide download progress feedback.") # reset feedback message
     display_message_2.set("") # reset feedback message
     error_message.set("") # reset any error messages
@@ -187,13 +189,6 @@ def bulk_download():
                 for obj in data['results']:
                     try:
                         print("downloading resource id: {}".format(obj['resource'].rsplit('/', 1)[-1]))
-                        # assign next object['resource'] url to file variable
-                        file = requests.get(obj["resource"], stream=True)
-                        # write file variable to actual local zipfile saving to user provided directory and doing it in chunks
-                        with open('{}/{}'.format(folder_path.get(), obj['resource'].rsplit('/', 1)[-1]), 'wb') as zipfile:
-                            for chunk in file.iter_content(chunk_size=1024):
-                                if chunk:
-                                    zipfile.write(chunk)
                         # count each file written
                         count += 1
                         # update progress_value variable by dividing new count number by total api object count
@@ -207,12 +202,19 @@ def bulk_download():
                         # make sure message area/labels are updated
                         message_area_1.update_idletasks()
                         message_area_2.update_idletasks()
+                        # assign next object['resource'] url to file variable
+                        file = requests.get(obj["resource"], stream=True)
+                        # write file variable to actual local zipfile saving to user provided directory and doing it in chunks
+                        with open('{}/{}'.format(folder_path.get(), obj['resource'].rsplit('/', 1)[-1]), 'wb') as zipfile:
+                            for chunk in file.iter_content(chunk_size=1024):
+                                if chunk:
+                                    zipfile.write(chunk)
                         if progress_value == 100:
                             end_time = datetime.now().replace(microsecond=0)
                             print('total_time is:', str(end_time - start_time))
                             display_message_2.set("100% complete. total time = {}".format(end_time - start_time))
                             message_area_2.update_idletasks()
-                    # sepcific requests library exceptions to catch errors getting data from the api
+                    # sepcific requests library exceptions to catch any errors getting data from the api
                     except requests.exceptions.HTTPError as http_error:
                         print ("http error:", http_error)
                         error_message.set("http error: ", http_error)
@@ -253,14 +255,16 @@ def bulk_download():
 
 def start():
     main_thread = threading.Thread(name='bulk_download', target=bulk_download)
+    main_thread.daemon = True
     main_thread.start()
 
 def kill():
-    print('killing the bulk_download function')
-    window.quit()
+    messagebox.askokcancel(title="Exit Program", message="Are you sure you want to quit?")
+    # if ok button clicked, then destroy window
+    print('killing bulk downloader...')
+    window.destroy()
 
 def stop():
-    print('stopping the bulk downloader')
     kill_thread = threading.Thread(name='killer', target=kill)
     kill_thread.start()
 
@@ -269,9 +273,9 @@ browse = tk.Button(top_frame, text="Browse", command=browse_button)
 browse.pack()
 # on macos, button color doesn't seem to be properly reflected; comment out for now and use default color
 # getdata_button = tk.Button(bottom_frame, text="Get Data", command=bulk_download, bg="#009933", fg="white", activebackground="green", activeforeground="white")
-getdata = tk.Button(bottom_frame_right, text="Get Data", command=start)
-getdata.pack(side='right')
-stop_it = tk.Button(bottom_frame_left, text="Stop", command=stop)
-stop_it.pack(side='left')
+getdata = tk.Button(bottom_frame, text="Get Data", command=start)
+getdata.pack(side='right', expand=1)
+stop_it = tk.Button(bottom_frame, text="Quit", command=stop)
+stop_it.pack(side='left', expand=1)
 # fire tkinter mainloop() on window to run the program
 window.mainloop()
