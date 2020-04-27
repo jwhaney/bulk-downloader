@@ -19,9 +19,9 @@ top_frame = tk.Frame(window, borderwidth=20, pady=10)
 middle_frame_1 = tk.Frame(window, borderwidth=20)
 middle_frame_2 = tk.Frame(window, borderwidth=20)
 middle_left_frame_2 = tk.Frame(middle_frame_2, borderwidth=10)
-middle_left_frame_2.grid(column=0,row=1)
+middle_left_frame_2.pack(fill='both')
 middle_right_frame_2 = tk.Frame(middle_frame_2, borderwidth=10)
-middle_right_frame_2.grid(column=1,row=1)
+middle_right_frame_2.pack(fill='both')
 middle_frame_3 = tk.Frame(window, borderwidth=20)
 middle_frame_4 = tk.Frame(window, borderwidth=20)
 bottom_frame = tk.Frame(window, borderwidth=20, pady=10)
@@ -133,7 +133,7 @@ def bulk_download():
     t = type_value.get()
 
     # function to check if a valid uuid is provided
-    def is_valid_uuid(val):
+    def valid_uuid(val):
         try:
             UUID(str(val))
             return True
@@ -142,7 +142,7 @@ def bulk_download():
 
     # first check to make sure the collection id string is valid
     # then assign data variable based on checkbox selections (build the url string requests needs to get data from rest endpoint)
-    if is_valid_uuid(c):
+    if valid_uuid(c):
         if c and not t:
             # if no selections made, build url string to get all resources for that collection id
             print('no selections made')
@@ -154,6 +154,13 @@ def bulk_download():
             possible future enhancement here to add ability to handle multiple resource type filters
             '''
             data = requests.get(base_url + id_query + c + type_abbr_query + t).json()
+
+        # stop function if user hits stop button
+        def run_check(val):
+            if val:
+                pass
+            else:
+                sys.exit()
 
         # progress bar update function
         def p_bar(value):
@@ -187,51 +194,55 @@ def bulk_download():
                 start_time = datetime.now().replace(microsecond=0)
 
                 for obj in data['results']:
-                    try:
-                        print("downloading resource id: {}".format(obj['resource'].rsplit('/', 1)[-1]))
-                        # count each file written
-                        count += 1
-                        # update progress_value variable by dividing new count number by total api object count
-                        progress_value = round((count/api_num_count)*100)
-                        print(str(progress_value) + '% downloaded')
-                        # feed new progress value into p_bar function to update gui
-                        p_bar(progress_value)
-                        # show display message/text as progress percentage string
-                        display_message_1.set("{}/{} resources downloaded".format(count, api_str_count))
-                        display_message_2.set("download progress: " + str(progress_value) + "%")
-                        # make sure message area/labels are updated
-                        message_area_1.update_idletasks()
-                        message_area_2.update_idletasks()
-                        # assign next object['resource'] url to file variable
-                        file = requests.get(obj["resource"], stream=True)
-                        # write file variable to actual local zipfile saving to user provided directory and doing it in chunks
-                        with open('{}/{}'.format(folder_path.get(), obj['resource'].rsplit('/', 1)[-1]), 'wb') as zipfile:
-                            for chunk in file.iter_content(chunk_size=1024):
-                                if chunk:
-                                    zipfile.write(chunk)
-                        if progress_value == 100:
-                            end_time = datetime.now().replace(microsecond=0)
-                            print('total_time is:', str(end_time - start_time))
-                            display_message_2.set("100% complete. total time = {}".format(end_time - start_time))
+                    # check if user hit stop button to set running = False
+                    if running:
+                        try:
+                            print("downloading resource id: {}".format(obj['resource'].rsplit('/', 1)[-1]))
+                            # count each file written
+                            count += 1
+                            # update progress_value variable by dividing new count number by total api object count
+                            progress_value = round((count/api_num_count)*100)
+                            print(str(progress_value) + '% downloaded')
+                            # feed new progress value into p_bar function to update gui
+                            p_bar(progress_value)
+                            # show display message/text as progress percentage string
+                            display_message_1.set("{}/{} resources downloaded".format(count, api_str_count))
+                            display_message_2.set("download progress: " + str(progress_value) + "%")
+                            # make sure message area/labels are updated
+                            message_area_1.update_idletasks()
                             message_area_2.update_idletasks()
-                    # sepcific requests library exceptions to catch any errors getting data from the api
-                    except requests.exceptions.HTTPError as http_error:
-                        print ("http error:", http_error)
-                        error_message.set("http error: ", http_error)
-                        message_area_3.update_idletasks()
-                    except requests.exceptions.ConnectionError as connection_error:
-                        print ("error connecting:", connection_error)
-                        error_message.set("error connecting: ", connection_error)
-                        message_area_3.update_idletasks()
-                    except requests.exceptions.Timeout as timeout_error:
-                        print ("timeout error:", timeout_error)
-                        error_message.set("timeout error: ", timeout_error)
-                        message_area_3.update_idletasks()
-                    # general catch all requests library exception to catch an error if it is outside the above exceptions
-                    except requests.exceptions.RequestException as general_error:
-                        print ("OOps, there was some error: ", general_error)
-                        error_message.set("OOps, there was some error: ", general_error)
-                        message_area_3.update_idletasks()
+                            # assign next object['resource'] url to file variable
+                            file = requests.get(obj["resource"], stream=True)
+                            # write file variable to actual local zipfile saving to user provided directory and doing it in chunks
+                            with open('{}/{}'.format(folder_path.get(), obj['resource'].rsplit('/', 1)[-1]), 'wb') as zipfile:
+                                for chunk in file.iter_content(chunk_size=1024):
+                                    if chunk:
+                                        zipfile.write(chunk)
+                            if progress_value == 100:
+                                end_time = datetime.now().replace(microsecond=0)
+                                print('total_time is:', str(end_time - start_time))
+                                display_message_2.set("100% complete. total time = {}".format(end_time - start_time))
+                                message_area_2.update_idletasks()
+                        # sepcific requests library exceptions to catch any errors getting data from the api
+                        except requests.exceptions.HTTPError as http_error:
+                            print ("http error:", http_error)
+                            error_message.set("http error: ", http_error)
+                            message_area_3.update_idletasks()
+                        except requests.exceptions.ConnectionError as connection_error:
+                            print ("error connecting:", connection_error)
+                            error_message.set("error connecting: ", connection_error)
+                            message_area_3.update_idletasks()
+                        except requests.exceptions.Timeout as timeout_error:
+                            print ("timeout error:", timeout_error)
+                            error_message.set("timeout error: ", timeout_error)
+                            message_area_3.update_idletasks()
+                        # general catch all requests library exception to catch an error if it is outside the above exceptions
+                        except requests.exceptions.RequestException as general_error:
+                            print ("OOps, there was some error: ", general_error)
+                            error_message.set("OOps, there was some error: ", general_error)
+                            message_area_3.update_idletasks()
+                    else:
+                        sys.exit()
 
                 print("completed. {} out of {} resource(s) successfully downloaded.".format(count, api_str_count))
                 display_message_1.set("completed. {} out of {} resource(s) downloaded.".format(count, api_str_count))
@@ -253,16 +264,17 @@ def bulk_download():
         error_message.set("Error. There was a problem with the collection id provided.")
         message_area_3.update_idletasks()
 
+
 def start():
     main_thread = threading.Thread(name='bulk_download', target=bulk_download)
-    main_thread.daemon = True
     main_thread.start()
 
 def kill():
-    messagebox.askokcancel(title="Exit Program", message="Are you sure you want to quit?")
-    # if ok button clicked, then destroy window
-    print('killing bulk downloader...')
-    window.destroy()
+    response = messagebox.askokcancel(title="Exit Program", message="Are you sure you want to quit?")
+    if response:
+        # if ok button clicked to quite program, set running = False
+        print('killing bulk downloader...')
+        running = False
 
 def stop():
     kill_thread = threading.Thread(name='killer', target=kill)
