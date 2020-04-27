@@ -53,15 +53,12 @@ collection_id.pack()
 collection_id.focus()
 
 label_4 = tk.Label(top_frame, text="Browse to a directory where you would like to save your downloaded data.")
-label_4.configure(font=('Courier', 9, 'bold'), pady=10)
-label_4.pack(fill='both')
-
-label_5 = tk.Label(middle_left_frame_2, text="Lidar Filters")
-label_6 = tk.Label(middle_right_frame_2, text="Imagery Filters")
-filter_lbl_list = [label_5, label_6]
-for lbl in filter_lbl_list:
-    lbl.configure(font=('Courier', 9, 'bold'))
-    lbl.pack(side='top',anchor='w')
+label_5 = tk.Label(middle_left_frame_2, text="Lidar")
+label_6 = tk.Label(middle_right_frame_2, text="Imagery")
+lbl_list = [label_4, label_5, label_6]
+for lbl in lbl_list:
+    lbl.config(font=('Courier', 9, 'bold'), pady=10)
+    lbl.pack(fill='both')
 
 # resource types check box variables - onvalue string is used in the api query (resource_type_abbreviation)
 type_value = tk.StringVar()
@@ -74,10 +71,10 @@ type_5 = tk.Checkbutton(middle_right_frame_2, text="Natural Color (3 Band)", var
 type_6 = tk.Checkbutton(middle_right_frame_2, text="Natural Color/Color Infrared (4 Band)", var=type_value, onvalue="NC-CIR", offvalue="")
 type_7 = tk.Checkbutton(middle_right_frame_2, text="Black & White (1 Band)", var=type_value, onvalue="BW", offvalue="")
 type_list = [type_1, type_2, type_3, type_4, type_5, type_6, type_7]
-# for loop to configure all checkbuttons with font
-for type in type_list:
-    type.configure(font=('Courier', 9))
-    type.pack(side='top',anchor='w')
+# for loop to pack & configure checkbuttons
+for l in type_list:
+    l.config(font=('Courier', 9))
+    l.pack(fill="both")
 
 # Progress bar widget
 progress = Progressbar(middle_frame_3, orient='horizontal')
@@ -100,7 +97,7 @@ for area in message_area_list:
 
 folder_path = tk.StringVar()
 label_4 = tk.Label(top_frame, textvariable=folder_path)
-label_4.configure(font=('Courier', 9))
+label_4.configure(font=('Courier', 9), pady=10)
 label_4.pack(fill='both')
 
 def browse_button():
@@ -110,14 +107,13 @@ def browse_button():
     folder_path.set(filename)
     print('folder_path variable:', folder_path.get())
 
-# variable to be used for stop/kill function button
-# after_id = None
-# sec = 0
+# global running variable
+running = None
 
 # function to make requests to api.tnris.org resources endpoint to download data
 def bulk_download():
     # variables
-    running = True
+    global running
     display_message_1.set("Messages here provide download progress feedback.") # reset feedback message
     display_message_2.set("") # reset feedback message
     error_message.set("") # reset any error messages
@@ -172,7 +168,6 @@ def bulk_download():
         message_area_1.update_idletasks()
 
         """
-        main logic
         1) make sure data download directory (folder_path variable) is provided and exists; else throw error message
         2) check that there are no incorrect type filters applied so that the request actually has api results - based on
            the api request count > 0.
@@ -192,9 +187,10 @@ def bulk_download():
 
                 # start time to be used later to calculate total program run time
                 start_time = datetime.now().replace(microsecond=0)
+                running = True
 
                 for obj in data['results']:
-                    # check if user hit stop button to set running = False
+                    # check if user hit stop button to set running = None
                     if running:
                         try:
                             print("downloading resource id: {}".format(obj['resource'].rsplit('/', 1)[-1]))
@@ -241,8 +237,6 @@ def bulk_download():
                             print ("OOps, there was some error: ", general_error)
                             error_message.set("OOps, there was some error: ", general_error)
                             message_area_3.update_idletasks()
-                    else:
-                        sys.exit()
 
                 print("completed. {} out of {} resource(s) successfully downloaded.".format(count, api_str_count))
                 display_message_1.set("completed. {} out of {} resource(s) downloaded.".format(count, api_str_count))
@@ -264,18 +258,23 @@ def bulk_download():
         error_message.set("Error. There was a problem with the collection id provided.")
         message_area_3.update_idletasks()
 
-
+# fires the main bulk_download function on its own separate thread
 def start():
     main_thread = threading.Thread(name='bulk_download', target=bulk_download)
     main_thread.start()
 
+# this function changes the running variable from True to None and stops
+# the main bulk_download function from running / breaks the for loop
 def kill():
-    response = messagebox.askokcancel(title="Exit Program", message="Are you sure you want to quit?")
+    global running
+    response = messagebox.askokcancel(title="Quit Downloading Data", message="Are you sure you want to quit downloading?")
+    # if ok button clicked to quit, set running var to None which will stop the for loop. see line 195
     if response:
-        # if ok button clicked to quite program, set running = False
-        print('killing bulk downloader...')
-        running = False
+        print('quitting bulk downloader process...')
+        running = None
 
+# function to set up separate thread and target for kill function
+# this function is fired when the stop button is clicked
 def stop():
     kill_thread = threading.Thread(name='killer', target=kill)
     kill_thread.start()
@@ -283,11 +282,10 @@ def stop():
 # buttons that do stuff
 browse = tk.Button(top_frame, text="Browse", command=browse_button)
 browse.pack()
-# on macos, button color doesn't seem to be properly reflected; comment out for now and use default color
-# getdata_button = tk.Button(bottom_frame, text="Get Data", command=bulk_download, bg="#009933", fg="white", activebackground="green", activeforeground="white")
 getdata = tk.Button(bottom_frame, text="Get Data", command=start)
 getdata.pack(side='right', expand=1)
 stop_it = tk.Button(bottom_frame, text="Quit", command=stop)
 stop_it.pack(side='left', expand=1)
+
 # fire tkinter mainloop() on window to run the program
 window.mainloop()
