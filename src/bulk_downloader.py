@@ -2,8 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter.ttk import Progressbar
 from tkinter import messagebox
-import requests
-import time, sys, os
+import requests, os
 from datetime import datetime
 from uuid import UUID
 import threading
@@ -163,13 +162,14 @@ def bulk_download():
 
         """
         1) make sure data download directory (folder_path variable) is provided and exists; else display error message to user
-        2) check that the api data request actually returns results
-        2) check that there are no incorrect type filters applied so that the request actually has api results - based on
-           the api request count > 0.
-        3) loop through all object resources for the provided collection and save them to file using same name as s3 .zip
-           and save it in the provided directory
-        4) update the progress bar and message feedback for user to see progress as files are being downloaded
-        5) throw any specific request library exceptions / errors to the user for feedback
+        2) check that the api data request actually returns results; this prevents incorrect type filters applied so that the
+           request actually has api results - based on the api request count > 0.
+        3) update the progress bar and message feedback for user to see progress as files are being downloaded
+        4) loop through all object resources for the provided collection id and save them to file using the same name as s3 .zip
+           and save it in the provided directory in chunks
+        5) when 100% records complete, calculate total time utility took downloading files and display it to user
+        5) throw any specific request library exceptions / errors to the user for feedback if required fields are not provided or
+           if wrong filters are applied, etc.
         """
 
         if os.path.exists(folder_path.get()):
@@ -262,8 +262,8 @@ def start():
     main_thread = threading.Thread(name='bulk_download', target=bulk_download)
     main_thread.start()
 
-# this function changes the running variable from True to None and stops
-# the main bulk_download function from running / breaks the for loop
+# this function changes the running variable from True to None and stops the main
+# bulk_download function from running / breaks the for loop when running = None
 def kill():
     global running
     response = messagebox.askokcancel(title="Stop Downloading", message="Are you sure you want to stop downloading?")
