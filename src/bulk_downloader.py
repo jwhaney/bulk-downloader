@@ -158,7 +158,7 @@ def bulk_download():
             progress.update_idletasks()
 
         # show user how many collection resources returned from query
-        display_message_1.set("{} resources found for tnris collection id {}".format(data['count'], c))
+        display_message_1.set("{} resources found".format(data['count']))
         message_area_1.update_idletasks()
 
         """
