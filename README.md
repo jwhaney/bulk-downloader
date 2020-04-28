@@ -35,10 +35,12 @@ __create a shortcut on__ [Windows 10](https://www.minitool.com/news/create-deskt
 
 1. hit the green *Clone or Download* button in this repo (upper right side). if you are already familiar with git and gitHub, then just clone the repo to local and skip to #4.
 2. click *Download ZIP*. you will need to extract the downloaded .zip file to where you want your project to reside. the downloaded .zip file will be called __bulk-downloader-master.zip__.
-3. __*optional*__ - create a virtual environment for the bulk-downloader to isolate the requirements/python packages.
-4. open terminal and cd into your project source code folder - `cd bulk-downloader-master/src`
-5. run `pip install -r requirements.txt`
-6. run `python3 bulk_downloader.py` to start the script.
+3. __*optional*__ - create a python 3 virtual environment for the bulk-downloader to isolate the requirements/python packages.
+4. open terminal and cd into your project source code folder - `cd bulk-downloader/src`
+5. run `pip3 install -r requirements.txt`
+    - if you've created a python 3 virtual environment (step #3) then run `pip install -r requirements.txt`
+6. run `python3 bulk_downloader.py` to start the script utility.
+    - if you've created a python 3 virtual environment (step #3) then run `python bulk_downloader.py`
 
 
 -------------------------------
@@ -69,7 +71,7 @@ __create a shortcut on__ [Windows 10](https://www.minitool.com/news/create-deskt
 
 ### requirements
 
-this project was built on __linux mint 19__ using __python 3__ and the __tkinter__ gui library
+this project was built on __linux mint 19__ using __python 3.6.9__ and the __tkinter__ gui library
 
 - altgraph==0.17
 - certifi==2019.11.28
@@ -96,3 +98,16 @@ __*if you do not see the correct version of your operating system listed in the 
 4. `pip install -r src/requirements.txt`
 5. `pyinstaller src/bulk_downloader.py`
 6. navigate to ./dist/bulk_downloader/bulk_downloader and double-click the file to run the utility
+
+
+-------------------------------
+
+
+### resources
+
+here is a list of some resources that may help with the setup and use of this utility:
+
+- [The Hitchhiker's Guide to Python](https://docs.python-guide.org/)
+- [Full Stack Python](https://www.fullstackpython.com/best-python-resources.html)
+- [Official Python 3.6 Docs](https://docs.python.org/3.6/)
+- [More official Python documentation](https://www.python.org/doc/)
