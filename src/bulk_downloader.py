@@ -239,18 +239,18 @@ def bulk_download():
                 message_area_1.update_idletasks()
             else:
                 # return a message to the user that there is an error with either the  collection id string or the filter applied
-                print("Error. No resource results. Please check your collection id or the filter applied.")
-                error_message.set("Error. No resource results. Please check your collection id or the filter applied.")
+                print("Error. No resource results. Check your collection id or filters applied.")
+                error_message.set("Error. No resource results. Check your collection id or filters applied.")
                 # update error message/label
                 message_area_3.update_idletasks()
         else:
-            print("Error. There was a problem with the directory provided to save data.")
-            error_message.set("Error. There was a problem with the directory provided to save data.")
+            print("Error. Check the directory provided to save data.")
+            error_message.set("Error. Check the directory provided to save data.")
             # update error message/label
             message_area_3.update_idletasks()
     else:
-        print("Error. There was a problem with the collection id provided.")
-        error_message.set("Error. There was a problem with the collection id provided.")
+        print("Error. Check the collection id provided.")
+        error_message.set("Error. Check the collection id provided.")
         message_area_3.update_idletasks()
 
 # fires the main bulk_download function on its own separate thread
@@ -262,10 +262,10 @@ def start():
 # the main bulk_download function from running / breaks the for loop
 def kill():
     global running
-    response = messagebox.askokcancel(title="Quit Downloading Data", message="Are you sure you want to quit downloading?")
+    response = messagebox.askokcancel(title="Stop Downloading", message="Are you sure you want to stop downloading?")
     # if ok button clicked to quit, set running var to None which will stop the for loop. see line 195
     if response:
-        print('quitting bulk downloader process...')
+        print("stopping bulk downloader...")
         running = None
 
 # function to set up separate thread and target for kill function
@@ -279,7 +279,7 @@ browse = tk.Button(top_frame, text="Browse", command=browse_button)
 browse.pack()
 getdata = tk.Button(bottom_frame, text="Get Data", command=start)
 getdata.pack(side='right', expand=1)
-stop_it = tk.Button(bottom_frame, text="Quit", command=stop)
+stop_it = tk.Button(bottom_frame, text="Stop", command=stop)
 stop_it.pack(side='left', expand=1)
 
 # fire tkinter mainloop() on window to run the program
