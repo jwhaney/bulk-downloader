@@ -137,7 +137,7 @@ def bulk_download():
         except ValueError:
             return False
 
-    # first check to make sure the collection id string is valid
+    # first check to make sure the collection id string is a valid uuid format/type
     # then assign data variable based on checkbox selections (build the url string requests needs to get data from rest endpoint)
     if valid_uuid(c):
         if c and not t:
@@ -162,7 +162,8 @@ def bulk_download():
         message_area_1.update_idletasks()
 
         """
-        1) make sure data download directory (folder_path variable) is provided and exists; else throw error message
+        1) make sure data download directory (folder_path variable) is provided and exists; else display error message to user
+        2) check that the api data request actually returns results
         2) check that there are no incorrect type filters applied so that the request actually has api results - based on
            the api request count > 0.
         3) loop through all object resources for the provided collection and save them to file using same name as s3 .zip
@@ -177,15 +178,17 @@ def bulk_download():
                 api_str_count = str(data['count'])
                 api_num_count = data['count']
 
-                print("beginning dowload process")
+                print("beginning download process")
 
                 # start time to be used later to calculate total program run time
                 start_time = datetime.now().replace(microsecond=0)
-                # set running to True
+
+                # set running to True; used for stop downloading functionality
                 running = True
 
+                # loop over each object at the api rest endpoint
                 for obj in data['results']:
-                    # check if user hit stop button to set running = None
+                    # check if user hit stop button
                     if running:
                         try:
                             print("downloading resource id: {}".format(obj['resource'].rsplit('/', 1)[-1]))
@@ -209,6 +212,7 @@ def bulk_download():
                                 for chunk in file.iter_content(chunk_size=1024):
                                     if chunk:
                                         zipfile.write(chunk)
+                            # if progress has reached 100%, show message to user with total time of downloading process
                             if progress_value == 100:
                                 end_time = datetime.now().replace(microsecond=0)
                                 print('total_time is:', str(end_time - start_time))
