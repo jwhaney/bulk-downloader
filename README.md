@@ -9,7 +9,9 @@ the bulk downloader utility uses the publicly available tnris api rest endpoint 
 ## recommendation
 it is recommended, especially if you plan to download large collections/datasets such as lidar, that you save the data in a location that has plenty of disk/storage space. an external hard drive is ideal. however, if you'd like to store the data locally on your computer, just be sure you have enough disk/storage space before you run this utility. otherwise, you may encounter errors that the program does not anticipate.
 
-## instructions
+additionally, this utility is dependent on a solid internet connection. if you experience issues, it could be due to your internet connection speed.
+
+## setup
 
 ### setup option 1 - find and download the executable for your operating system
 
@@ -42,7 +44,7 @@ __create a shortcut on__ [Windows 10](https://www.minitool.com/news/create-deskt
 -------------------------------
 
 
-### instructions to run the utility gui
+## instructions
 
 1. you should now see a graphical user interface (gui). paste the tnris datahub collection id you want to bulk download data for at the top.
   - to find the collection id you want, go to data.tnris.org and find the dataset
@@ -55,7 +57,7 @@ __create a shortcut on__ [Windows 10](https://www.minitool.com/news/create-deskt
     - **note** - it is important to be familiar with what resource types are available for any one collection. some collections only have one resource type, such as vector datasets like address points or parcels. if you attempt to filter by a resource type that doesn't exist for that collection, you will receive a message telling you there was a problem.
       - you can find the resource type information by visiting the datahub collection and clicking an area type polygon in the download map which will then list the types of data available for download. the types will vary depending on the collection.
       - __*example*__: a lot of lidar collections/datasets have Digital Elevation Models, Lidar Point Clouds, & Hypsography resource types for each area. so, if you download an entire collection you will receive all three of those types for each area of the collection. if there are 17 areas for the collection, 17 x 3 resource types = 51 resources downloaded if no resource type filter applied.
-1. click the **Get Data** button and let the script do its thing.
+1. click the **Get Data** button and let the script/utility do its thing.
     - depending on the number of resources and the size of those resources, the batch download process could take some time so please be patient.
     - it may be beneficial for large datasets like lidar, to download each resource type one by one (ie. Hypsography first, then DEMs, then LPCs.)
     - if you feel like there is an issue, or the utility is not working, you can **Stop** the bulk downloader at any time by hitting the **Stop** button and then confirming that you want to stop the bulk download process.
