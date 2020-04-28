@@ -19,9 +19,9 @@ top_frame = tk.Frame(window, borderwidth=20, pady=10)
 middle_frame_1 = tk.Frame(window, borderwidth=20)
 middle_frame_2 = tk.Frame(window, borderwidth=20)
 middle_left_frame_2 = tk.Frame(middle_frame_2, borderwidth=10)
-middle_left_frame_2.pack(fill='both')
+middle_left_frame_2.pack(side='left', expand=1)
 middle_right_frame_2 = tk.Frame(middle_frame_2, borderwidth=10)
-middle_right_frame_2.pack(fill='both')
+middle_right_frame_2.pack(side='right', expand=1)
 middle_frame_3 = tk.Frame(window, borderwidth=20)
 middle_frame_4 = tk.Frame(window, borderwidth=20)
 bottom_frame = tk.Frame(window, borderwidth=20, pady=10)
@@ -66,11 +66,12 @@ type_value.set("")
 type_1 = tk.Checkbutton(middle_left_frame_2, text="Lidar Point Cloud", var=type_value, onvalue="LPC", offvalue="")
 type_2 = tk.Checkbutton(middle_left_frame_2, text="Hypsography", var=type_value, onvalue="HYPSO", offvalue="")
 type_3 = tk.Checkbutton(middle_left_frame_2, text="Digital Elevation Model", var=type_value, onvalue="DEM", offvalue="")
+type_placeholder = tk.Label(middle_left_frame_2, text="") # this empty label is used for alignment
 type_4 = tk.Checkbutton(middle_right_frame_2, text="Color Infrared (3 Band)", var=type_value, onvalue="CIR", offvalue="")
 type_5 = tk.Checkbutton(middle_right_frame_2, text="Natural Color (3 Band)", var=type_value, onvalue="NC", offvalue="")
 type_6 = tk.Checkbutton(middle_right_frame_2, text="Natural Color/Color Infrared (4 Band)", var=type_value, onvalue="NC-CIR", offvalue="")
 type_7 = tk.Checkbutton(middle_right_frame_2, text="Black & White (1 Band)", var=type_value, onvalue="BW", offvalue="")
-type_list = [type_1, type_2, type_3, type_4, type_5, type_6, type_7]
+type_list = [type_1, type_2, type_3, type_placeholder, type_4, type_5, type_6, type_7]
 # for loop to pack & configure checkbuttons
 for l in type_list:
     l.config(font=('Courier', 9))
@@ -151,13 +152,6 @@ def bulk_download():
             '''
             data = requests.get(base_url + id_query + c + type_abbr_query + t).json()
 
-        # stop function if user hits stop button
-        def run_check(val):
-            if val:
-                pass
-            else:
-                sys.exit()
-
         # progress bar update function
         def p_bar(value):
             progress['value'] = value
@@ -187,6 +181,7 @@ def bulk_download():
 
                 # start time to be used later to calculate total program run time
                 start_time = datetime.now().replace(microsecond=0)
+                # set running to True
                 running = True
 
                 for obj in data['results']:
