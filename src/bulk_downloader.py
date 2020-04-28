@@ -39,25 +39,25 @@ for frame in frame_list:
 
 # label variables
 label_1 = tk.Label(top_frame, text="Enter a TNRIS DataHub Collection ID: ")
-label_2 = tk.Label(middle_frame_1, text="If the Collection ID entered has multiple resource types, you can filter them here.")
-label_3 = tk.Label(middle_frame_1, text="If no selection is made, all resources for the collection will be downloaded.")
+label_2 = tk.Label(middle_frame_1, text="If the collection entered has multiple resource types, filter them here.")
+label_3 = tk.Label(middle_frame_1, text="No filter selection will result in all collection resources downloaded.")
 label_list = [label_1, label_2, label_3]
 # for loop to configure all labels with font
 for label in label_list:
-    label.configure(font=('Courier', 9, 'bold'))
+    label.configure(font=('Courier', 10, 'bold'))
     label.pack(fill='both')
 
 # collection id entry
-collection_id = tk.Entry(top_frame, width=45, font=('Courier', 9))
+collection_id = tk.Entry(top_frame, width=45, font=('Courier', 10))
 collection_id.pack()
 collection_id.focus()
 
-label_4 = tk.Label(top_frame, text="Browse to a directory where you would like to save your downloaded data.")
+label_4 = tk.Label(top_frame, text="Browse to a directory where you can save your downloaded data.")
 label_5 = tk.Label(middle_left_frame_2, text="Lidar")
 label_6 = tk.Label(middle_right_frame_2, text="Imagery")
 lbl_list = [label_4, label_5, label_6]
 for lbl in lbl_list:
-    lbl.config(font=('Courier', 9, 'bold'), pady=10)
+    lbl.config(font=('Courier', 10, 'bold'), pady=10)
     lbl.pack(fill='both')
 
 # resource types check box variables - onvalue string is used in the api query (resource_type_abbreviation)
@@ -74,7 +74,7 @@ type_7 = tk.Checkbutton(middle_right_frame_2, text="Black & White (1 Band)", var
 type_list = [type_1, type_2, type_3, type_placeholder, type_4, type_5, type_6, type_7]
 # for loop to pack & configure checkbuttons
 for l in type_list:
-    l.config(font=('Courier', 9))
+    l.config(font=('Courier', 10))
     l.pack(fill="both")
 
 # Progress bar widget
@@ -88,9 +88,9 @@ display_message_1 = tk.StringVar()
 display_message_2 = tk.StringVar()
 error_message = tk.StringVar()
 display_message_1.set("Messages here provide download progress feedback.")
-message_area_1 = tk.Label(middle_frame_4, textvariable=display_message_1, font=('Courier', 9))
-message_area_2 = tk.Label(middle_frame_4, textvariable=display_message_2, font=('Courier', 9), fg='green')
-message_area_3 = tk.Label(middle_frame_4, textvariable=error_message, font=('Courier', 9), fg='red')
+message_area_1 = tk.Label(middle_frame_4, textvariable=display_message_1, font=('Courier', 10))
+message_area_2 = tk.Label(middle_frame_4, textvariable=display_message_2, font=('Courier', 10), fg='green')
+message_area_3 = tk.Label(middle_frame_4, textvariable=error_message, font=('Courier', 10), fg='red')
 message_area_list = [message_area_1, message_area_2, message_area_3]
 # for loop to pack message areas
 for area in message_area_list:
@@ -98,7 +98,7 @@ for area in message_area_list:
 
 folder_path = tk.StringVar()
 label_4 = tk.Label(top_frame, textvariable=folder_path)
-label_4.configure(font=('Courier', 9), pady=10)
+label_4.configure(font=('Courier', 10), pady=10)
 label_4.pack(fill='both')
 
 def browse_button():
