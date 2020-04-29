@@ -9,8 +9,8 @@ import threading
 
 # master/parent window contains all gui elements
 window = tk.Tk()
-window.maxsize(1300, 1200)
-window.resizable(width=False,height=True)
+# window.maxsize(1300, 1200)
+# window.resizable(width=False,height=True)
 window.title("TNRIS DataHub Bulk Download Utility")
 
 # frame variables - parent is window
