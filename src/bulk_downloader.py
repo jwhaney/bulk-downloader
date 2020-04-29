@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter.ttk import Progressbar
 from tkinter import messagebox
+from tkinter import Scrollbar
 import requests, os
 from datetime import datetime
 from uuid import UUID
@@ -9,6 +10,8 @@ import threading
 
 # master/parent window contains all gui elements
 window = tk.Tk()
+scrollbar = Scrollbar(window)
+scrollbar.pack(side='right', fill='y')
 # window.maxsize(1300, 1200)
 # window.resizable(width=False,height=True)
 window.title("TNRIS DataHub Bulk Download Utility")
