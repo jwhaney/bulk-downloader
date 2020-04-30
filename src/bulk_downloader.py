@@ -10,12 +10,6 @@ import threading
 
 # master/parent window contains all gui elements
 window = tk.Tk()
-# get users screen height and width
-height = window.winfo_screenheight()
-width = window.winfo_screenwidth()
-# window.geometry("{}x{}".format(width, height))
-# set max window size to user's screen height/width
-window.maxsize(width, height)
 window.title("TNRIS DataHub Bulk Download Utility")
 
 # frame variables - parent is window
