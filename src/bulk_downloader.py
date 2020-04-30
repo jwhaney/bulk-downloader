@@ -10,23 +10,25 @@ import threading
 
 # master/parent window contains all gui elements
 window = tk.Tk()
-scrollbar = Scrollbar(window)
-scrollbar.pack(side='right', fill='y')
-# window.maxsize(1300, 1200)
-# window.resizable(width=False,height=True)
+# get users screen height and width
+height = window.winfo_screenheight()
+width = window.winfo_screenwidth()
+# window.geometry("{}x{}".format(width, height))
+# set max window size to user's screen height/width
+window.maxsize(width, height)
 window.title("TNRIS DataHub Bulk Download Utility")
 
 # frame variables - parent is window
-top_frame = tk.Frame(window, borderwidth=20, pady=10)
-middle_frame_1 = tk.Frame(window, borderwidth=20)
-middle_frame_2 = tk.Frame(window, borderwidth=20)
+top_frame = tk.Frame(window, borderwidth=10)
+middle_frame_1 = tk.Frame(window, borderwidth=10)
+middle_frame_2 = tk.Frame(window, borderwidth=10)
 middle_left_frame_2 = tk.Frame(middle_frame_2, borderwidth=10)
 middle_left_frame_2.pack(side='left', expand=1)
 middle_right_frame_2 = tk.Frame(middle_frame_2, borderwidth=10)
 middle_right_frame_2.pack(side='right', expand=1)
-middle_frame_3 = tk.Frame(window, borderwidth=20)
-middle_frame_4 = tk.Frame(window, borderwidth=20)
-bottom_frame = tk.Frame(window, borderwidth=20, pady=10)
+middle_frame_3 = tk.Frame(window, borderwidth=10, padx=10)
+middle_frame_4 = tk.Frame(window, borderwidth=10)
+bottom_frame = tk.Frame(window, borderwidth=10, pady=10)
 frame_list = [
               top_frame,
               middle_frame_1,
