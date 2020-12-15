@@ -42,6 +42,12 @@ __create a shortcut on__ [Windows 10](https://www.minitool.com/news/create-deskt
 6. run `python3 bulk_downloader.py` to start the script utility.
     - if you've created a python 3 virtual environment (step #3) then run `python bulk_downloader.py`
 
+__note__: if you encounter an error regarding tkinter (Tk) not being installed, such as
+
+`ModuleNotFoundError: No module named 'tkinter'`
+
+then follow the instructions at the url below.
+https://tkdocs.com/tutorial/install.html
 
 -------------------------------
 
