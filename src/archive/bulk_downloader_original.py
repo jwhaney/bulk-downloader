@@ -173,65 +173,56 @@ def bulk_download():
                 # set running to True; used for stop downloading functionality
                 running = True
 
-                # function iterates over api results and downloads collection resources
-                def downerator(data, running, count):
-                    for obj in data['results']:
-                        # check if user hit stop button
-                        if running:
-                            try:
-                                # count each file written
-                                count += 1
-                                print("{} | downloading resource id: {}".format(count, obj['resource'].rsplit('/', 1)[-1]))
-                                # update progress_value variable by dividing new count number by total api object count
-                                progress_value = round((count/api_num_count)*100)
-                                # feed new progress value into p_bar function to update gui
-                                p_bar(progress_value)
-                                # show display message/text as progress percentage string
-                                display_message_1.set("{}/{} resources downloaded".format(count, api_str_count))
-                                display_message_2.set("download progress: " + str(progress_value) + "%")
-                                # make sure message area/labels are updated
-                                message_area_1.update_idletasks()
+                # loop over each object at the api rest endpoint
+                for obj in data['results']:
+                    # check if user hit stop button
+                    if running:
+                        try:
+                            print("downloading resource id: {}".format(obj['resource'].rsplit('/', 1)[-1]))
+                            # count each file written
+                            count += 1
+                            # update progress_value variable by dividing new count number by total api object count
+                            progress_value = round((count/api_num_count)*100)
+                            print(str(progress_value) + '% downloaded')
+                            # feed new progress value into p_bar function to update gui
+                            p_bar(progress_value)
+                            # show display message/text as progress percentage string
+                            display_message_1.set("{}/{} resources downloaded".format(count, api_str_count))
+                            display_message_2.set("download progress: " + str(progress_value) + "%")
+                            # make sure message area/labels are updated
+                            message_area_1.update_idletasks()
+                            message_area_2.update_idletasks()
+                            # assign next object['resource'] url to file variable
+                            file = requests.get(obj["resource"], stream=True)
+                            # write file variable to actual local zipfile saving to user provided directory and doing it in chunks
+                            with open('{}/{}'.format(folder_path.get(), obj['resource'].rsplit('/', 1)[-1]), 'wb') as zipfile:
+                                for chunk in file.iter_content(chunk_size=1024):
+                                    if chunk:
+                                        zipfile.write(chunk)
+                            # if progress has reached 100%, show message to user with total time of downloading process
+                            if progress_value == 100:
+                                end_time = datetime.now().replace(microsecond=0)
+                                print('total_time is:', str(end_time - start_time))
+                                display_message_2.set("100% complete. total time = {}".format(end_time - start_time))
                                 message_area_2.update_idletasks()
-                                # assign next object['resource'] url to file variable
-                                file = requests.get(obj["resource"], stream=True)
-                                # write file variable to actual local zipfile saving to user provided directory and doing it in chunks
-                                with open('{}/{}'.format(folder_path.get(), obj['resource'].rsplit('/', 1)[-1]), 'wb') as zipfile:
-                                    for chunk in file.iter_content(chunk_size=1024):
-                                        if chunk:
-                                            zipfile.write(chunk)
-                                # if progress has reached 100%, show message to user with total time of downloading process
-                                if progress_value == 100:
-                                    end_time = datetime.now().replace(microsecond=0)
-                                    print('total_time is:', str(end_time - start_time))
-                                    display_message_2.set("100% complete. total time = {}".format(end_time - start_time))
-                                    message_area_2.update_idletasks()
-                            # sepcific requests library exceptions to catch any errors getting data from the api
-                            except requests.exceptions.HTTPError as http_error:
-                                print ("http error:", http_error)
-                                error_message.set("http error: ", http_error)
-                                message_area_3.update_idletasks()
-                            except requests.exceptions.ConnectionError as connection_error:
-                                print ("error connecting:", connection_error)
-                                error_message.set("error connecting: ", connection_error)
-                                message_area_3.update_idletasks()
-                            except requests.exceptions.Timeout as timeout_error:
-                                print ("timeout error:", timeout_error)
-                                error_message.set("timeout error: ", timeout_error)
-                                message_area_3.update_idletasks()
-                            # general catch all requests library exception to catch an error if it is outside the above exceptions
-                            except requests.exceptions.RequestException as general_error:
-                                print ("OOps, there was some error: ", general_error)
-                                error_message.set("OOps, there was some error: ", general_error)
-                                message_area_3.update_idletasks()
-                    # return count
-                    return count
-
-                # run downerator
-                count = downerator(data, running, count)
-                # check if next value present for pagination; if so, use it as data variable and re-run downerator
-                while data['next']:
-                    data = requests.get(data['next']).json()
-                    count = downerator(data, running, count)
+                        # sepcific requests library exceptions to catch any errors getting data from the api
+                        except requests.exceptions.HTTPError as http_error:
+                            print ("http error:", http_error)
+                            error_message.set("http error: ", http_error)
+                            message_area_3.update_idletasks()
+                        except requests.exceptions.ConnectionError as connection_error:
+                            print ("error connecting:", connection_error)
+                            error_message.set("error connecting: ", connection_error)
+                            message_area_3.update_idletasks()
+                        except requests.exceptions.Timeout as timeout_error:
+                            print ("timeout error:", timeout_error)
+                            error_message.set("timeout error: ", timeout_error)
+                            message_area_3.update_idletasks()
+                        # general catch all requests library exception to catch an error if it is outside the above exceptions
+                        except requests.exceptions.RequestException as general_error:
+                            print ("OOps, there was some error: ", general_error)
+                            error_message.set("OOps, there was some error: ", general_error)
+                            message_area_3.update_idletasks()
 
                 print("completed. {} out of {} resource(s) successfully downloaded.".format(count, api_str_count))
                 display_message_1.set("completed. {} out of {} resource(s) downloaded.".format(count, api_str_count))
