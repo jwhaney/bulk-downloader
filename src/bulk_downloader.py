@@ -193,12 +193,12 @@ def bulk_download():
                                 message_area_1.update_idletasks()
                                 message_area_2.update_idletasks()
                                 # assign next object['resource'] url to file variable
-                                file = requests.get(obj["resource"], stream=True)
+                                # file = requests.get(obj["resource"], stream=True)
                                 # write file variable to actual local zipfile saving to user provided directory and doing it in chunks
-                                with open('{}/{}'.format(folder_path.get(), obj['resource'].rsplit('/', 1)[-1]), 'wb') as zipfile:
-                                    for chunk in file.iter_content(chunk_size=1024):
-                                        if chunk:
-                                            zipfile.write(chunk)
+                                # with open('{}/{}'.format(folder_path.get(), obj['resource'].rsplit('/', 1)[-1]), 'wb') as zipfile:
+                                #     for chunk in file.iter_content(chunk_size=1024):
+                                #         if chunk:
+                                #             zipfile.write(chunk)
                                 # if progress has reached 100%, show message to user with total time of downloading process
                                 if progress_value == 100:
                                     end_time = datetime.now().replace(microsecond=0)
@@ -262,14 +262,15 @@ def start():
 # bulk_download function from running / breaks the for loop when running = None
 def kill():
     global running
+    print(running)
     response = messagebox.askokcancel(title="Stop Downloading", message="Are you sure you want to stop downloading?")
-    # if ok button clicked to quit, set running var to None which will stop the for loop. see line 195
+    # if ok button clicked to quit, set running var to None which will stop the for loop
     if response:
         print("stopping bulk downloader...")
         running = None
 
 # function to set up separate thread and target for kill function
-# this function is fired when the stop button is clicked
+# fired when the stop button is clicked
 def stop():
     kill_thread = threading.Thread(name='killer', target=kill)
     kill_thread.start()
@@ -283,4 +284,5 @@ stop_it = tk.Button(bottom_frame, text="Stop", command=stop)
 stop_it.pack(side='left', expand=1)
 
 # fire tkinter mainloop() on window to run the program
-window.mainloop()
+if __name__ == "__main__":
+    window.mainloop()
