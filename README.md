@@ -19,7 +19,7 @@ additionally, this utility is dependent on a solid internet connection. if you e
 2. download the .zip file that most closely applies to your operating system (or download the entire code repo).
 3. once you've downloaded the executable .zip, you will need to extract the project files from the zip file (should be in your *Downloads* folder or similar).
 4. navigate inside the unzipped folder where there has been a shortcut (alias, .bat, or .sh/bash depending on the os) created. this shortcut runs the original executable file located at __*bulk-downloader/dist/bulk_downloader/bulk_downloader*__. double click it to run the bulk_downloader utility.
-  - if for some reason the shortcut does not work, create your own by linking to the file at the above path which will make it easier to run. you can also create a shortcut from your desktop or other location if you prefer.
+    - if for some reason the shortcut does not work, create your own by linking to the file at the above path which will make it easier to run. you can also create a shortcut from your desktop or other location if you prefer.
 
 **Important Note**: do not move the executable file from its native location in the project. this might either corrupt the application or make it not work at all. create a shortcut that can reside on your desktop or wherever. here are some resources that might help with the process:
 
