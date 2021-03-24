@@ -146,7 +146,6 @@ class BulkDownloader(object):
         if response:
             print("stopping bulk downloader...")
             self.running = None
-            return self.running
 
     # method to check if a valid uuid is provided
     def valid_uuid(self, val):
@@ -167,99 +166,105 @@ class BulkDownloader(object):
         self.error_message.set("") # reset any error messages
         c = self.collection_id.get()
         t = self.type_value.get()
+        self.count = 0
         base_url = "https://api.tnris.org/api/v1/resources/"
         id_query = "?collection_id="
         type_query = "&resource_type_abbreviation="
         # area_query = "&area_type="
-        self.data = ""
 
         # first check to make sure the collection id string is a valid using valid_uuid method
+        # then check if the folder_path directory to save the data exists
         # then assign data variable based on checkbox selections (build the url string requests needs to get data from rest endpoint)
         if self.valid_uuid(c):
-            if c and not t:
-                # if no selections made, build url string to get all resources for that collection id
-                print('no selections made')
-                self.data = requests.get(base_url + id_query + c).json()
-            elif c and t:
-                # if type selection made but not area, build the url string
-                print('type selection made. type = {}'.format(t))
-                '''
-                possible future enhancement here to add ability to handle multiple resource type filters
-                '''
-                self.data = requests.get(base_url + id_query + c + type_query + t).json()
+            if os.path.exists(self.folder_path.get()):
+                if c and not t:
+                    # if no selections made, build url string to get all resources for that collection id
+                    print('no selections made')
+                    self.data = requests.get(base_url + id_query + c).json()
+                elif c and t:
+                    # if type selection made but not area, build the url string
+                    print('type selection made. type = {}'.format(t))
+                    '''
+                    possible future enhancement here to add ability to handle multiple resource type filters
+                    '''
+                    self.data = requests.get(base_url + id_query + c + type_query + t).json()
+            else:
+                # retrun message to the user that there was a problem with the directory chosen to save downloaded data
+                print("Error. Check the directory provided to save data.")
+                self.error_message.set("Error. Check the directory provided to save data.")
+                self.message_area_3.update_idletasks()
+                return
         else:
             print("Error. Check the collection id provided.")
             self.error_message.set("Error. Check the collection id provided.")
             self.message_area_3.update_idletasks()
+            return
 
         # run the downloader method
-        self.downloader(self.running, self.data, self.count)
+        if self.data:
+            self.downloader(self.running, self.data, self.count)
 
     def downloader(self, running, data, count):
         # main method that iterates over api results and downloads collection resources
         api_num_count = self.data['count']
         api_str_count = str(self.data['count'])
 
-        if os.path.exists(self.folder_path.get()):
-            if self.data['count'] > 0:
-                for obj in self.data['results']:
-                    if self.running:
-                        try:
-                            # count each file written
-                            self.count += 1
-                            print("{} | downloading resource id: {}".format(self.count, obj['resource'].rsplit('/', 1)[-1]))
-                            # update progress_value variable by dividing new count number by total api object count
-                            self.progress_value = round((self.count/api_num_count)*100)
-                            # feed new progress value into p_bar function to update gui
-                            self.p_bar(self.progress_value)
-                            # show display message/text as progress percentage string
-                            self.display_message_1.set("{}/{} resources downloaded".format(self.count, api_str_count))
-                            self.display_message_2.set("download progress: " + str(self.progress_value) + "%")
-                            # make sure message area/labels are updated
-                            self.message_area_1.update_idletasks()
-                            self.message_area_2.update_idletasks()
-                            # assign next object['resource'] url to file variable
-                            # file = requests.get(obj["resource"], stream=True)
-                            # write file variable to actual local zipfile saving to user provided directory and doing it in chunks
-                            # with open('{}/{}'.format(folder_path.get(), obj['resource'].rsplit('/', 1)[-1]), 'wb') as zipfile:
-                            #     for chunk in file.iter_content(chunk_size=1024):
-                            #         if chunk:
-                            #             zipfile.write(chunk)
-                        # sepcific requests library exceptions to catch any errors getting data from the api
-                        except requests.exceptions.HTTPError as http_error:
-                            print ("http error:", http_error)
-                            self.error_message.set("http error: ", http_error)
-                            self.message_area_3.update_idletasks()
-                        except requests.exceptions.ConnectionError as connection_error:
-                            print ("error connecting:", connection_error)
-                            self.error_message.set("error connecting: ", connection_error)
-                            self.message_area_3.update_idletasks()
-                        except requests.exceptions.Timeout as timeout_error:
-                            print ("timeout error:", timeout_error)
-                            self.error_message.set("timeout error: ", timeout_error)
-                            self.message_area_3.update_idletasks()
-                        # general catch all requests library exception to catch an error if it is outside the above exceptions
-                        except requests.exceptions.RequestException as general_error:
-                            print ("OOps, there was some error: ", general_error)
-                            self.error_message.set("OOps, there was some error: ", general_error)
-                            self.message_area_3.update_idletasks()
-                    else:
-                        # if user stops program, display message
-                        print("Bulk Downloader stopped. {} out of {} resources downloaded.".format(self.count, api_str_count))
-                        self.display_message_1.set("Stopped. {}/{} resources downloaded.".format(self.count, api_str_count))
+        if self.data['count'] > 0:
+            for obj in self.data['results']:
+                if self.running:
+                    try:
+                        # count each file written
+                        self.count += 1
+                        print("{} | downloading resource id: {}".format(self.count, obj['resource'].rsplit('/', 1)[-1]))
+                        # update progress_value variable by dividing new count number by total api object count
+                        self.progress_value = round((self.count/api_num_count)*100)
+                        # feed new progress value into p_bar function to update gui
+                        self.p_bar(self.progress_value)
+                        # show display message/text as progress percentage string
+                        self.display_message_1.set("{}/{} resources downloaded".format(self.count, api_str_count))
+                        self.display_message_2.set("download progress: " + str(self.progress_value) + "%")
+                        # make sure message area/labels are updated
                         self.message_area_1.update_idletasks()
-                # if first page of resources downloaded successfully, run paginator method to see if there are additional pages
-                self.paginator(self.running, self.count)
-            else:
-                # return a message to the user that there is an error with either the  collection id string or the filter applied
-                print("Error. No resource results. Check your collection id or filters applied.")
-                self.error_message.set("Error. No resource results. Check your collection id or filters applied.")
-                self.message_area_3.update_idletasks()
+                        self.message_area_2.update_idletasks()
+                        # assign next object['resource'] url to file variable
+                        file = requests.get(obj["resource"], stream=True)
+                        # write file variable to actual local zipfile saving to user provided directory and doing it in chunks
+                        with open('{}/{}'.format(self.folder_path.get(), obj['resource'].rsplit('/', 1)[-1]), 'wb') as zipfile:
+                            for chunk in file.iter_content(chunk_size=1024):
+                                if chunk:
+                                    zipfile.write(chunk)
+                    # sepcific requests library exceptions to catch any errors getting data from the api
+                    except requests.exceptions.HTTPError as http_error:
+                        print ("http error:", http_error)
+                        self.error_message.set("http error: ", http_error)
+                        self.message_area_3.update_idletasks()
+                    except requests.exceptions.ConnectionError as connection_error:
+                        print ("error connecting:", connection_error)
+                        self.error_message.set("error connecting: ", connection_error)
+                        self.message_area_3.update_idletasks()
+                    except requests.exceptions.Timeout as timeout_error:
+                        print ("timeout error:", timeout_error)
+                        self.error_message.set("timeout error: ", timeout_error)
+                        self.message_area_3.update_idletasks()
+                    # general catch all requests library exception to catch an error if it is outside the above exceptions
+                    except requests.exceptions.RequestException as general_error:
+                        print ("OOps, there was some error: ", general_error)
+                        self.error_message.set("OOps, there was some error: ", general_error)
+                        self.message_area_3.update_idletasks()
+                else:
+                    # if user stops program, display message
+                    print("Bulk Downloader stopped.")
+                    self.error_message.set("Bulk Downloader stopped.")
+                    self.message_area_3.update_idletasks()
+                    return
         else:
-            # retrun message to the user that there was a problem with the directory chosen to save downloaded data
-            print("Error. Check the directory provided to save data.")
-            self.error_message.set("Error. Check the directory provided to save data.")
+            # return a message to the user that there is an error with either the  collection id string or the filter applied
+            print("Error. No resource results. Check your collection id or filters applied.")
+            self.error_message.set("Error. No resource results. Check your collection id or filters applied.")
             self.message_area_3.update_idletasks()
+
+        # if first page of resources downloaded successfully, run paginator method to see if there are additional pages
+        self.paginator(self.running, self.count)
 
     def paginator(self, running, count):
         # check if next value present for pagination; if so, use it as data variable and re-run downloader method
@@ -267,12 +272,6 @@ class BulkDownloader(object):
             self.data = requests.get(self.data['next']).json()
             count = self.downloader(running, self.data, count)
 
-        # if user didn't stop program, display success messages, labels, areas, etc
-        print(count)
-        if running:
-            print("completed. {} out of {} resource(s) successfully downloaded.".format(count, self.data['count']))
-            self.display_message_1.set("completed. {} out of {} resource(s) downloaded.".format(count, self.data['count']))
-            self.message_area_1.update_idletasks()
 
 # run the program
 if __name__ == "__main__":
