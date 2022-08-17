@@ -81,6 +81,7 @@ class BulkDownloader(object):
         self.type_5 = tk.Checkbutton(self.middle_right_frame_2, text="Natural Color (3 Band)", var=self.type_value, onvalue="NC", offvalue="")
         self.type_6 = tk.Checkbutton(self.middle_right_frame_2, text="Natural Color/Color Infrared (4 Band)", var=self.type_value, onvalue="NC-CIR", offvalue="")
         self.type_7 = tk.Checkbutton(self.middle_right_frame_2, text="Black & White (1 Band)", var=self.type_value, onvalue="BW", offvalue="")
+        self.type_7 = tk.Checkbutton(self.middle_right_frame_2, text="StratMap CLFD Lidar Point Cloud", var=self.type_value, onvalue="SM-LPC", offvalue="")
         self.type_list = [self.type_1, self.type_2, self.type_3, self.type_placeholder, self.type_4, self.type_5, self.type_6, self.type_7]
         # for loop to pack & configure checkbuttons
         for t in self.type_list:
